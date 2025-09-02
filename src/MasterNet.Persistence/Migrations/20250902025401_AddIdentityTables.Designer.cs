@@ -3,6 +3,7 @@ using System;
 using MasterNet.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MasterNet.Persistence.Migrations
 {
     [DbContext(typeof(MasterNetDbContext))]
-    partial class MasterNetDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250902025401_AddIdentityTables")]
+    partial class AddIdentityTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
@@ -60,6 +63,48 @@ namespace MasterNet.Persistence.Migrations
                             Description = "Learn to implement Clean Architecture principles in .NET applications for maintainable and scalable software.",
                             PublicationDate = new DateTime(2024, 3, 10, 9, 15, 0, 0, DateTimeKind.Utc),
                             Title = "Clean Architecture with .NET"
+                        },
+                        new
+                        {
+                            Id = new Guid("44444444-4444-4444-4444-444444444444"),
+                            Description = "Build scalable microservices using .NET, Docker, and modern cloud technologies with hands-on projects.",
+                            PublicationDate = new DateTime(2024, 4, 5, 16, 45, 0, 0, DateTimeKind.Utc),
+                            Title = "Microservices Architecture with .NET"
+                        },
+                        new
+                        {
+                            Id = new Guid("55555555-5555-5555-5555-555555555555"),
+                            Description = "Master comprehensive testing strategies including unit testing, integration testing, and test-driven development.",
+                            PublicationDate = new DateTime(2024, 5, 12, 11, 20, 0, 0, DateTimeKind.Utc),
+                            Title = "Unit Testing and TDD in .NET"
+                        },
+                        new
+                        {
+                            Id = new Guid("66666666-6666-6666-6666-666666666666"),
+                            Description = "Design and develop professional RESTful APIs with authentication, versioning, and comprehensive documentation.",
+                            PublicationDate = new DateTime(2024, 6, 18, 13, 30, 0, 0, DateTimeKind.Utc),
+                            Title = "RESTful Web APIs with ASP.NET Core"
+                        },
+                        new
+                        {
+                            Id = new Guid("77777777-7777-7777-7777-777777777777"),
+                            Description = "Create interactive web applications using Blazor Server and WebAssembly with C# instead of JavaScript.",
+                            PublicationDate = new DateTime(2024, 7, 25, 15, 45, 0, 0, DateTimeKind.Utc),
+                            Title = "Blazor: Full-Stack Web Development"
+                        },
+                        new
+                        {
+                            Id = new Guid("88888888-8888-8888-8888-888888888888"),
+                            Description = "Deploy and scale .NET applications in Microsoft Azure with cloud-native development practices.",
+                            PublicationDate = new DateTime(2024, 8, 8, 12, 15, 0, 0, DateTimeKind.Utc),
+                            Title = "Azure Cloud Development with .NET"
+                        },
+                        new
+                        {
+                            Id = new Guid("99999999-9999-9999-9999-999999999999"),
+                            Description = "Learn advanced techniques to optimize .NET application performance, memory management, and scalability.",
+                            PublicationDate = new DateTime(2024, 9, 14, 10, 30, 0, 0, DateTimeKind.Utc),
+                            Title = "Performance Optimization in .NET"
                         });
                 });
 
@@ -139,6 +184,62 @@ namespace MasterNet.Persistence.Migrations
                             Degree = "PhD in Software Engineering",
                             FirstName = "Sarah",
                             LastName = "Williams"
+                        },
+                        new
+                        {
+                            Id = new Guid("23456789-2345-2345-2345-234567890123"),
+                            Degree = "Bachelor of Computer Engineering",
+                            FirstName = "Michael",
+                            LastName = "Johnson"
+                        },
+                        new
+                        {
+                            Id = new Guid("34567890-3456-3456-3456-345678901234"),
+                            Degree = "Master of Information Technology",
+                            FirstName = "Emily",
+                            LastName = "Davis"
+                        },
+                        new
+                        {
+                            Id = new Guid("45678901-4567-4567-4567-456789012345"),
+                            Degree = "Certified Solutions Architect",
+                            FirstName = "Robert",
+                            LastName = "Brown"
+                        },
+                        new
+                        {
+                            Id = new Guid("56789012-5678-5678-5678-567890123456"),
+                            Degree = "Master of Business Administration",
+                            FirstName = "Jennifer",
+                            LastName = "Miller"
+                        },
+                        new
+                        {
+                            Id = new Guid("67890123-6789-6789-6789-678901234567"),
+                            Degree = "PhD in Computer Science",
+                            FirstName = "David",
+                            LastName = "Wilson"
+                        },
+                        new
+                        {
+                            Id = new Guid("78901234-7890-7890-7890-789012345678"),
+                            Degree = "Senior Software Developer",
+                            FirstName = "Lisa",
+                            LastName = "Garcia"
+                        },
+                        new
+                        {
+                            Id = new Guid("89012345-8901-8901-8901-890123456789"),
+                            Degree = "Cloud Solutions Expert",
+                            FirstName = "Christopher",
+                            LastName = "Martinez"
+                        },
+                        new
+                        {
+                            Id = new Guid("90123456-9012-9012-9012-901234567890"),
+                            Degree = "DevOps Engineering Specialist",
+                            FirstName = "Amanda",
+                            LastName = "Taylor"
                         });
                 });
 
@@ -201,6 +302,27 @@ namespace MasterNet.Persistence.Migrations
                             CurrentPrice = 99.99m,
                             Name = "Standard Tier",
                             PromotionalPrice = 79.99m
+                        },
+                        new
+                        {
+                            Id = new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc"),
+                            CurrentPrice = 149.99m,
+                            Name = "Premium Tier",
+                            PromotionalPrice = 119.99m
+                        },
+                        new
+                        {
+                            Id = new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+                            CurrentPrice = 29.99m,
+                            Name = "Student Discount",
+                            PromotionalPrice = 19.99m
+                        },
+                        new
+                        {
+                            Id = new Guid("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"),
+                            CurrentPrice = 299.99m,
+                            Name = "Enterprise License",
+                            PromotionalPrice = 249.99m
                         });
                 });
 
@@ -217,7 +339,8 @@ namespace MasterNet.Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Score")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasComment("Score debe estar entre 1 y 5");
 
                     b.Property<string>("Student")
                         .IsRequired()
@@ -333,15 +456,13 @@ namespace MasterNet.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012",
-                            ConcurrencyStamp = "ADMIN-STAMP-12345",
+                            Id = "d342281e-3be7-4bc1-ac77-91190d6e1a47",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "CLIENT-ROLE-ID-87654321-4321-4321-4321-210987654321",
-                            ConcurrencyStamp = "CLIENT-STAMP-54321",
+                            Id = "0bc6d645-46c9-4318-a4fa-175553e302ea",
                             Name = "CLIENT",
                             NormalizedName = "CLIENT"
                         });
@@ -375,98 +496,98 @@ namespace MasterNet.Persistence.Migrations
                             Id = 1,
                             ClaimType = "POLICIES",
                             ClaimValue = "COURSE_READ",
-                            RoleId = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012"
+                            RoleId = "d342281e-3be7-4bc1-ac77-91190d6e1a47"
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "POLICIES",
-                            ClaimValue = "COURSE_WRITE",
-                            RoleId = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012"
+                            ClaimValue = "COURSE_UPDATE",
+                            RoleId = "d342281e-3be7-4bc1-ac77-91190d6e1a47"
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "POLICIES",
-                            ClaimValue = "COURSE_UPDATE",
-                            RoleId = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012"
+                            ClaimValue = "COURSE_WRITE",
+                            RoleId = "d342281e-3be7-4bc1-ac77-91190d6e1a47"
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "POLICIES",
                             ClaimValue = "COURSE_DELETE",
-                            RoleId = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012"
+                            RoleId = "d342281e-3be7-4bc1-ac77-91190d6e1a47"
                         },
                         new
                         {
                             Id = 5,
                             ClaimType = "POLICIES",
-                            ClaimValue = "INSTRUCTOR_READ",
-                            RoleId = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012"
+                            ClaimValue = "INSTRUCTOR_CREATE",
+                            RoleId = "d342281e-3be7-4bc1-ac77-91190d6e1a47"
                         },
                         new
                         {
                             Id = 6,
                             ClaimType = "POLICIES",
-                            ClaimValue = "INSTRUCTOR_CREATE",
-                            RoleId = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012"
+                            ClaimValue = "INSTRUCTOR_READ",
+                            RoleId = "d342281e-3be7-4bc1-ac77-91190d6e1a47"
                         },
                         new
                         {
                             Id = 7,
                             ClaimType = "POLICIES",
                             ClaimValue = "INSTRUCTOR_UPDATE",
-                            RoleId = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012"
+                            RoleId = "d342281e-3be7-4bc1-ac77-91190d6e1a47"
                         },
                         new
                         {
                             Id = 8,
                             ClaimType = "POLICIES",
                             ClaimValue = "COMMENT_READ",
-                            RoleId = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012"
+                            RoleId = "d342281e-3be7-4bc1-ac77-91190d6e1a47"
                         },
                         new
                         {
                             Id = 9,
                             ClaimType = "POLICIES",
-                            ClaimValue = "COMMENT_CREATE",
-                            RoleId = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012"
+                            ClaimValue = "COMMENT_DELETE",
+                            RoleId = "d342281e-3be7-4bc1-ac77-91190d6e1a47"
                         },
                         new
                         {
                             Id = 10,
                             ClaimType = "POLICIES",
-                            ClaimValue = "COMMENT_DELETE",
-                            RoleId = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012"
+                            ClaimValue = "COMMENT_CREATE",
+                            RoleId = "d342281e-3be7-4bc1-ac77-91190d6e1a47"
                         },
                         new
                         {
                             Id = 11,
                             ClaimType = "POLICIES",
                             ClaimValue = "COURSE_READ",
-                            RoleId = "CLIENT-ROLE-ID-87654321-4321-4321-4321-210987654321"
+                            RoleId = "0bc6d645-46c9-4318-a4fa-175553e302ea"
                         },
                         new
                         {
                             Id = 12,
                             ClaimType = "POLICIES",
                             ClaimValue = "INSTRUCTOR_READ",
-                            RoleId = "CLIENT-ROLE-ID-87654321-4321-4321-4321-210987654321"
+                            RoleId = "0bc6d645-46c9-4318-a4fa-175553e302ea"
                         },
                         new
                         {
                             Id = 13,
                             ClaimType = "POLICIES",
                             ClaimValue = "COMMENT_READ",
-                            RoleId = "CLIENT-ROLE-ID-87654321-4321-4321-4321-210987654321"
+                            RoleId = "0bc6d645-46c9-4318-a4fa-175553e302ea"
                         },
                         new
                         {
                             Id = 14,
                             ClaimType = "POLICIES",
                             ClaimValue = "COMMENT_CREATE",
-                            RoleId = "CLIENT-ROLE-ID-87654321-4321-4321-4321-210987654321"
+                            RoleId = "0bc6d645-46c9-4318-a4fa-175553e302ea"
                         });
                 });
 
