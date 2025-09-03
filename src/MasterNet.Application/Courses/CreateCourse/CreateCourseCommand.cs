@@ -1,3 +1,4 @@
+using MasterNet.Application.Core;
 using MasterNet.Domain;
 using MasterNet.Persistence;
 using MediatR;
@@ -8,11 +9,11 @@ namespace MasterNet.Application.Courses.CreateCourse;
 public class CreateCourseCommand
 {
     public record CreateCourseCommandRequest(CreateCourseRequest createCourseRequest)
-    : IRequest<Guid>;
+    : IRequest<Result<Guid>>;
 
 
     internal class CreateCourseCommandHandler
-    : IRequestHandler<CreateCourseCommandRequest, Guid>
+    : IRequestHandler<CreateCourseCommandRequest, Result<Guid>>
     {
         private readonly MasterNetDbContext _context;
 
@@ -21,7 +22,7 @@ public class CreateCourseCommand
             _context = context;
         }
 
-        public async Task<Guid> Handle(
+        public async Task<Result<Guid>> Handle(
             CreateCourseCommandRequest request,
             CancellationToken cancellationToken
         )
@@ -82,9 +83,11 @@ public class CreateCourseCommand
                 course.Photos.Add(photo);
             }
 
-            await _context.SaveChangesAsync(cancellationToken);
+            var result = await _context.SaveChangesAsync(cancellationToken) > 0;
 
-            return course.Id;
+            return result
+                ? Result<Guid>.Success(course.Id) 
+                : Result<Guid>.Failure("Failed to create course");
         }
     }
 }
