@@ -229,6 +229,48 @@ public static class DataSeedExtensions
                     FirstName = "Emily",
                     LastName = "Rodriguez",
                     Degree = "Master in Data Science"
+                },
+                new() {
+                    Id = new Guid("44444444-4444-4444-4444-444444444444"),
+                    FirstName = "David",
+                    LastName = "Thompson",
+                    Degree = "Ph.D. in Machine Learning"
+                },
+                new() {
+                    Id = new Guid("55555555-5555-5555-5555-555555555555"),
+                    FirstName = "Lisa",
+                    LastName = "Anderson",
+                    Degree = "Master in Cybersecurity"
+                },
+                new() {
+                    Id = new Guid("66666666-6666-6666-6666-666666666666"),
+                    FirstName = "James",
+                    LastName = "Wilson",
+                    Degree = "Ph.D. in Artificial Intelligence"
+                },
+                new() {
+                    Id = new Guid("77777777-7777-7777-7777-777777777777"),
+                    FirstName = "Maria",
+                    LastName = "Garcia",
+                    Degree = "Master in Web Development"
+                },
+                new() {
+                    Id = new Guid("88888888-8888-8888-8888-888888888888"),
+                    FirstName = "Robert",
+                    LastName = "Brown",
+                    Degree = "Ph.D. in Database Systems"
+                },
+                new() {
+                    Id = new Guid("99999999-9999-9999-9999-999999999999"),
+                    FirstName = "Jennifer",
+                    LastName = "Davis",
+                    Degree = "Master in Cloud Computing"
+                },
+                new() {
+                    Id = new Guid("AAAAAAAA-1111-1111-1111-111111111111"),
+                    FirstName = "Alex",
+                    LastName = "Martinez",
+                    Degree = "Ph.D. in Software Architecture"
                 }
             };
 
@@ -259,6 +301,48 @@ public static class DataSeedExtensions
                     Name = "Professional Course",
                     CurrentPrice = 99.99m,
                     PromotionalPrice = 79.99m
+                },
+                new() {
+                    Id = new Guid("DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD"),
+                    Name = "Enterprise Course",
+                    CurrentPrice = 149.99m,
+                    PromotionalPrice = 99.99m
+                },
+                new() {
+                    Id = new Guid("EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE"),
+                    Name = "Student Discount",
+                    CurrentPrice = 19.99m,
+                    PromotionalPrice = 14.99m
+                },
+                new() {
+                    Id = new Guid("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"),
+                    Name = "Corporate Training",
+                    CurrentPrice = 299.99m,
+                    PromotionalPrice = 199.99m
+                },
+                new() {
+                    Id = new Guid("11111111-AAAA-AAAA-AAAA-AAAAAAAAAAAA"),
+                    Name = "Bootcamp Package",
+                    CurrentPrice = 499.99m,
+                    PromotionalPrice = 349.99m
+                },
+                new() {
+                    Id = new Guid("22222222-BBBB-BBBB-BBBB-BBBBBBBBBBBB"),
+                    Name = "Lifetime Access",
+                    CurrentPrice = 799.99m,
+                    PromotionalPrice = 599.99m
+                },
+                new() {
+                    Id = new Guid("33333333-CCCC-CCCC-CCCC-CCCCCCCCCCCC"),
+                    Name = "Team License (5 users)",
+                    CurrentPrice = 249.99m,
+                    PromotionalPrice = 199.99m
+                },
+                new() {
+                    Id = new Guid("44444444-DDDD-DDDD-DDDD-DDDDDDDDDDDD"),
+                    Name = "Free Trial",
+                    CurrentPrice = 0.00m,
+                    PromotionalPrice = 0.00m
                 }
             };
 
@@ -282,13 +366,55 @@ public static class DataSeedExtensions
                     Id = new Guid("55555555-5555-5555-5555-555555555555"),
                     Title = "Advanced Web Development",
                     Description = "Master modern web development techniques using the latest frameworks and tools.",
-                    PublicationDate = DateTime.UtcNow.AddDays(-15)
+                    PublicationDate = DateTime.UtcNow.AddDays(-25)
                 },
                 new() {
                     Id = new Guid("66666666-6666-6666-6666-666666666666"),
                     Title = "Data Science Fundamentals",
                     Description = "Explore data analysis, machine learning, and statistical methods for data-driven decisions.",
-                    PublicationDate = DateTime.UtcNow.AddDays(-7)
+                    PublicationDate = DateTime.UtcNow.AddDays(-20)
+                },
+                new() {
+                    Id = new Guid("77777777-7777-7777-7777-777777777777"),
+                    Title = "Mobile App Development",
+                    Description = "Build cross-platform mobile applications using modern frameworks and best practices.",
+                    PublicationDate = DateTime.UtcNow.AddDays(-15)
+                },
+                new() {
+                    Id = new Guid("88888888-8888-8888-8888-888888888888"),
+                    Title = "Cloud Computing Essentials",
+                    Description = "Master cloud computing concepts and services including AWS, Azure, and Google Cloud.",
+                    PublicationDate = DateTime.UtcNow.AddDays(-12)
+                },
+                new() {
+                    Id = new Guid("99999999-9999-9999-9999-999999999999"),
+                    Title = "Cybersecurity Fundamentals",
+                    Description = "Learn essential cybersecurity principles and practices to protect digital assets.",
+                    PublicationDate = DateTime.UtcNow.AddDays(-10)
+                },
+                new() {
+                    Id = new Guid("AAAAAAAA-2222-2222-2222-222222222222"),
+                    Title = "Machine Learning for Beginners",
+                    Description = "Introduction to machine learning algorithms and practical implementation techniques.",
+                    PublicationDate = DateTime.UtcNow.AddDays(-8)
+                },
+                new() {
+                    Id = new Guid("BBBBBBBB-3333-3333-3333-333333333333"),
+                    Title = "DevOps and CI/CD",
+                    Description = "Implement DevOps practices and continuous integration/deployment pipelines.",
+                    PublicationDate = DateTime.UtcNow.AddDays(-5)
+                },
+                new() {
+                    Id = new Guid("CCCCCCCC-4444-4444-4444-444444444444"),
+                    Title = "Database Design and Optimization",
+                    Description = "Design efficient databases and optimize performance for large-scale applications.",
+                    PublicationDate = DateTime.UtcNow.AddDays(-3)
+                },
+                new() {
+                    Id = new Guid("DDDDDDDD-5555-5555-5555-555555555555"),
+                    Title = "API Development and Microservices",
+                    Description = "Build scalable APIs and microservices architecture for modern applications.",
+                    PublicationDate = DateTime.UtcNow.AddDays(-1)
                 }
             };
 
@@ -313,26 +439,22 @@ public static class DataSeedExtensions
 
             if (courses.Any() && instructors.Any())
             {
-                // Ensure we have enough data to work with
-                if (courses.Count >= 1 && instructors.Count >= 1)
+                // Assign each course to instructors (some courses have multiple instructors)
+                for (int i = 0; i < Math.Min(courses.Count, 10); i++)
                 {
-                    courses[0].Instructors.Add(instructors[0]); // First course with first instructor
-                }
-                
-                if (courses.Count >= 2 && instructors.Count >= 2)
-                {
-                    courses[1].Instructors.Add(instructors[1]); // Second course with second instructor
-                }
-                
-                if (courses.Count >= 3 && instructors.Count >= 2)
-                {
-                    courses[2].Instructors.Add(instructors[1]); // Third course also with second instructor
-                }
-                
-                // Some courses can have multiple instructors
-                if (courses.Count >= 2 && instructors.Count >= 1)
-                {
-                    courses[1].Instructors.Add(instructors[0]); // Second course also with first instructor
+                    // Each course gets at least one instructor
+                    var primaryInstructor = instructors[i % instructors.Count];
+                    courses[i].Instructors.Add(primaryInstructor);
+                    
+                    // Some courses get a second instructor
+                    if (i % 3 == 0 && instructors.Count > 1)
+                    {
+                        var secondaryInstructor = instructors[(i + 1) % instructors.Count];
+                        if (!courses[i].Instructors.Contains(secondaryInstructor))
+                        {
+                            courses[i].Instructors.Add(secondaryInstructor);
+                        }
+                    }
                 }
             }
         }
@@ -347,20 +469,21 @@ public static class DataSeedExtensions
 
             if (courses.Any() && prices.Any())
             {
-                // Ensure we have enough data to work with
-                if (courses.Count >= 1 && prices.Count >= 1)
+                // Assign each course to pricing tiers
+                for (int i = 0; i < Math.Min(courses.Count, 10); i++)
                 {
-                    courses[0].Prices.Add(prices[0]); // First course - first price
-                }
-                
-                if (courses.Count >= 2 && prices.Count >= 2)
-                {
-                    courses[1].Prices.Add(prices[1]); // Second course - second price
-                }
-                
-                if (courses.Count >= 3 && prices.Count >= 1)
-                {
-                    courses[2].Prices.Add(prices[0]); // Third course - first price
+                    var priceIndex = i % prices.Count;
+                    courses[i].Prices.Add(prices[priceIndex]);
+                    
+                    // Some courses get multiple pricing options
+                    if (i % 4 == 0 && prices.Count > 1)
+                    {
+                        var alternativePrice = prices[(priceIndex + 1) % prices.Count];
+                        if (!courses[i].Prices.Contains(alternativePrice))
+                        {
+                            courses[i].Prices.Add(alternativePrice);
+                        }
+                    }
                 }
             }
         }
@@ -375,38 +498,48 @@ public static class DataSeedExtensions
             if (courses.Any())
             {
                 var ratings = new List<Rating>();
-                
-                // Only add ratings for courses that exist
-                if (courses.Count >= 1)
+                var studentNames = new[]
                 {
-                    ratings.AddRange(new[]
+                    "Alice Thompson", "Robert Davis", "Maria Garcia", "John Wilson", 
+                    "Sarah Johnson", "Michael Chen", "Emily Rodriguez", "David Brown",
+                    "Jessica Martinez", "Chris Anderson", "Amanda Taylor", "Kevin Moore",
+                    "Lisa White", "Ryan Jackson", "Nicole Harris"
+                };
+                
+                var comments = new[]
+                {
+                    "Excellent course! Very clear explanations and great examples.",
+                    "Good content, but could use more practical exercises.",
+                    "Outstanding course! Highly recommended for beginners.",
+                    "The instructor explains complex concepts very well.",
+                    "Perfect for getting started in this field.",
+                    "Could be improved with more real-world examples.",
+                    "Great course structure and pacing.",
+                    "Very comprehensive and well-organized.",
+                    "Learned a lot from this course!",
+                    "Good introduction but needs more advanced topics."
+                };
+
+                // Add 2-3 ratings per course
+                for (int i = 0; i < Math.Min(courses.Count, 10); i++)
+                {
+                    var numRatings = 2 + (i % 2); // 2 or 3 ratings per course
+                    
+                    for (int j = 0; j < numRatings; j++)
                     {
-                        new Rating {
+                        var studentIndex = (i * 3 + j) % studentNames.Length;
+                        var commentIndex = (i * 2 + j) % comments.Length;
+                        var score = 3 + (i + j) % 3; // Scores between 3-5
+                        
+                        ratings.Add(new Rating
+                        {
                             Id = Guid.NewGuid(),
-                            Student = "Alice Thompson",
-                            Comment = "Excellent course! Very clear explanations and great examples.",
-                            Score = 5,
-                            CourseId = courses[0].Id
-                        },
-                        new Rating {
-                            Id = Guid.NewGuid(),
-                            Student = "Robert Davis",
-                            Comment = "Good content, but could use more practical exercises.",
-                            Score = 4,
-                            CourseId = courses[0].Id
-                        }
-                    });
-                }
-                
-                if (courses.Count >= 2)
-                {
-                    ratings.Add(new Rating {
-                        Id = Guid.NewGuid(),
-                        Student = "Maria Garcia",
-                        Comment = "Outstanding course! Highly recommended for beginners.",
-                        Score = 5,
-                        CourseId = courses[1].Id
-                    });
+                            Student = studentNames[studentIndex],
+                            Comment = comments[commentIndex],
+                            Score = score,
+                            CourseId = courses[i].Id
+                        });
+                    }
                 }
 
                 if (ratings.Any())

@@ -1,4 +1,6 @@
 using MasterNet.Application;
+using MasterNet.Application.Interfaces;
+using MasterNet.Infrastructure.Reports;
 using MasterNet.Persistence;
 using MasterNet.Persistence.Extensions;
 using MasterNet.Persistence.Models;
@@ -13,6 +15,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
+
+//builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped(typeof(IReportService<>), typeof(ReportService<>));
+
 
 builder.Services.AddControllers();
 
