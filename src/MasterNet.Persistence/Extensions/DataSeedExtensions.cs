@@ -14,6 +14,68 @@ namespace MasterNet.Persistence.Extensions;
 public static class DataSeedExtensions
 {
     /// <summary>
+    /// Versión optimizada del seed que evita queries innecesarias si ya existen datos.
+    /// Ideal para evitar modificaciones constantes de la base de datos SQLite.
+    /// </summary>
+    public static async Task SeedDataAsync(
+        MasterNetDbContext context,
+        UserManager<AppUser> userManager,
+        RoleManager<IdentityRole> roleManager,
+        ILogger logger
+    )
+    {
+        try
+        {
+            // Verificación rápida: si ya hay cursos, asumimos que el seed ya se ejecutó
+            var hasData = await context.Courses!.AnyAsync();
+            if (hasData)
+            {
+                logger.LogInformation("Data already exists. Skipping seed.");
+                return;
+            }
+
+            logger.LogInformation("No data found. Starting seed process...");
+
+            // Seed roles - SIEMPRE necesario (todos los environments)
+            await SeedRolesAsync(roleManager, logger);
+
+            // Seed usuario admin esencial - SIEMPRE necesario para acceso inicial
+            await SeedEssentialUsersAsync(userManager, roleManager, logger);
+
+            // Seed de datos según environment
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var seedSampleData = Environment.GetEnvironmentVariable("SEED_SAMPLE_DATA");
+            
+            // Determinar si seedear datos de muestra
+            bool shouldSeedSampleData = environment switch
+            {
+                "Development" => true,                    // ✅ Development: siempre datos de muestra
+                "Staging" => true,                        // ✅ Staging: datos de muestra para testing
+                "Production" => seedSampleData == "true", // ❓ Production: solo si está explícitamente habilitado
+                _ => seedSampleData == "true"             // ❓ Otros: solo si está explícitamente habilitado
+            };
+            
+            if (shouldSeedSampleData)
+            {
+                logger.LogInformation($"Environment: {environment}. Seeding sample data...");
+                await SeedDevelopmentDataAsync(context, userManager, roleManager, logger);
+            }
+            else
+            {
+                logger.LogInformation($"Environment: {environment ?? "Unknown"}. Skipping sample data seeding.");
+                logger.LogInformation("Tip: Set environment variable SEED_SAMPLE_DATA=true to include sample data.");
+            }
+            
+            logger.LogInformation("Data seeding completed successfully");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An error occurred while seeding data");
+            throw;
+        }
+    }
+
+    /// <summary>
     /// Seedea datos de autenticación y datos base para desarrollo.
     /// Utiliza datos estáticos para evitar problemas en migraciones.
     /// </summary>
@@ -32,21 +94,48 @@ public static class DataSeedExtensions
             // Asegurar que la base de datos esté actualizada
             await context.Database.MigrateAsync();
 
-            // Seed roles si no existen
-            await SeedRolesAsync(roleManager, logger);
-
-            // Seed usuarios si no existen
-            await SeedUsersAsync(userManager, logger);
-            
-            // Seed data de dominio si no existe
-            await SeedDomainDataAsync(context, logger);
-            
-            logger.LogInformation("Data seeding completed successfully");
+            // Usar la versión optimizada
+            await SeedDataAsync(context, userManager, roleManager, logger);
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "An error occurred while seeding data");
             throw;
+        }
+    }
+
+    private static async Task SeedEssentialUsersAsync(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, ILogger logger)
+    {
+        // Verificar si ya existe un usuario admin
+        var existingAdmins = await userManager.GetUsersInRoleAsync(CustomRoles.ADMIN);
+        if (existingAdmins.Any())
+        {
+            logger.LogInformation("Admin user already exists. Skipping essential user creation.");
+            return;
+        }
+
+        logger.LogInformation("Creating essential admin user for system access...");
+
+        // Usuario Administrador ESENCIAL - SIEMPRE necesario
+        var adminUser = new AppUser
+        {
+            FullName = "Admin Admin",
+            UserName = "admin",
+            Email = "admin@gmail.com",
+            EmailConfirmed = true,
+            Degree = "System Administration"
+        };
+
+        var adminResult = await userManager.CreateAsync(adminUser, "Admin123$");
+        if (adminResult.Succeeded)
+        {
+            await userManager.AddToRoleAsync(adminUser, CustomRoles.ADMIN);
+            logger.LogInformation("Essential admin user created successfully");
+            logger.LogInformation("Login credentials - Email: admin@masternet.com, Password: Admin123$");
+        }
+        else
+        {
+            logger.LogError($"Failed to create essential admin user: {string.Join(", ", adminResult.Errors.Select(e => e.Description))}");
         }
     }
 
@@ -85,35 +174,22 @@ public static class DataSeedExtensions
         }
     }
 
-    private static async Task SeedUsersAsync(UserManager<AppUser> userManager, ILogger logger)
+    private static async Task SeedSampleUsersAsync(UserManager<AppUser> userManager, ILogger logger)
     {
-        if (!userManager.Users.Any())
+        // Solo crear usuarios de muestra si no existen
+        var sampleClientEmail = "johnsmith@gmail.com";
+        var existingClient = await userManager.FindByEmailAsync(sampleClientEmail);
+        
+        if (existingClient == null)
         {
-            logger.LogInformation("Seeding authentication users...");
+            logger.LogInformation("Creating sample users for development/testing...");
 
-            // Usuario Administrador
-            var adminUser = new AppUser
-            {
-                FullName = "Admin Admin",
-                UserName = "admin",
-                Email = "admin@mgmain.com",
-                EmailConfirmed = true,
-                Degree = "Software Engineering"
-            };
-
-            var adminResult = await userManager.CreateAsync(adminUser, "Admin123$");
-            if (adminResult.Succeeded)
-            {
-                await userManager.AddToRoleAsync(adminUser, CustomRoles.ADMIN);
-                logger.LogInformation("Admin user created successfully");
-            }
-
-            // Usuario Cliente
+            // Usuario Cliente de MUESTRA - Solo para development/staging
             var clientUser = new AppUser
             {
                 FullName = "John Smith",
                 UserName = "johnsmith",
-                Email = "johnsmith@gmail.com",
+                Email = sampleClientEmail,
                 EmailConfirmed = true,
                 Degree = "Software Engineering"
             };
@@ -122,7 +198,7 @@ public static class DataSeedExtensions
             if (clientResult.Succeeded)
             {
                 await userManager.AddToRoleAsync(clientUser, CustomRoles.CLIENT);
-                logger.LogInformation("Client user created successfully");
+                logger.LogInformation("Sample client user created successfully");
             }
         }
     }
@@ -341,5 +417,19 @@ public static class DataSeedExtensions
         }
 
         await context.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Método para seedear datos de desarrollo únicamente.
+    /// Se llama solo cuando ASPNETCORE_ENVIRONMENT = Development.
+    /// </summary>
+    private static async Task SeedDevelopmentDataAsync(
+        MasterNetDbContext context,
+        UserManager<AppUser> userManager,
+        RoleManager<IdentityRole> roleManager,
+        ILogger logger)
+    {
+        await SeedSampleUsersAsync(userManager, logger);
+        await SeedDomainDataAsync(context, logger);
     }
 }

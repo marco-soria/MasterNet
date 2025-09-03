@@ -3,6 +3,7 @@ using MasterNet.Persistence;
 using MasterNet.Persistence.Extensions;
 using MasterNet.Persistence.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 
 
@@ -35,20 +36,23 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthorization();
 
-// Seed data using proper Clean Architecture approach
-if (app.Environment.IsDevelopment())
+// Database initialization and seeding
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+var logger = services.GetRequiredService<ILogger<Program>>();
+
+try
 {
-    using var scope = app.Services.CreateScope();
-    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    var context = services.GetRequiredService<MasterNetDbContext>();
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
     
-    try
-    {
-        await app.Services.SeedDataAsync(logger);
-    }
-    catch (Exception ex)
-    {
-        logger.LogError(ex, "Failed to seed data on application startup");
-    }
+    await context.Database.MigrateAsync();
+    await DataSeedExtensions.SeedDataAsync(context, userManager, roleManager, logger);
+}
+catch (Exception ex)
+{
+    logger.LogError(ex, "An error occurred during migration or seeding.");
 }
 
 app.MapControllers();
