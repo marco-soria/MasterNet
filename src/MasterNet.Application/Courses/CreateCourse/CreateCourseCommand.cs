@@ -1,3 +1,4 @@
+using FluentValidation;
 using MasterNet.Application.Core;
 using MasterNet.Domain;
 using MasterNet.Persistence;
@@ -13,6 +14,7 @@ public class CreateCourseCommand
 
 
     internal class CreateCourseCommandHandler
+
     : IRequestHandler<CreateCourseCommandRequest, Result<Guid>>
     {
         private readonly MasterNetDbContext _context;
@@ -28,11 +30,11 @@ public class CreateCourseCommand
         )
         {
             var courseRequest = request.createCourseRequest;
-            
+
             // Validar que datos requeridos estén presentes
             if (string.IsNullOrWhiteSpace(courseRequest.Title))
                 throw new ArgumentException("Course title is required");
-                
+
             if (string.IsNullOrWhiteSpace(courseRequest.Description))
                 throw new ArgumentException("Course description is required");
 
@@ -52,7 +54,7 @@ public class CreateCourseCommand
                 var instructors = await _context.Instructors!
                     .Where(i => courseRequest.InstructorIds.Contains(i.Id))
                     .ToListAsync(cancellationToken);
-                    
+
                 course.Instructors = instructors;
             }
 
@@ -62,7 +64,7 @@ public class CreateCourseCommand
                 var prices = await _context.Prices!
                     .Where(p => courseRequest.PriceIds.Contains(p.Id))
                     .ToListAsync(cancellationToken);
-                    
+
                 course.Prices = prices;
             }
 
@@ -72,22 +74,31 @@ public class CreateCourseCommand
                 // TODO: Implementar subida de archivo real con Cloudinary
                 // Por ahora, simulamos guardando el nombre del archivo
                 var photoUrl = $"/uploads/courses/{course.Id}/{courseRequest.Photo.FileName}";
-                
+
                 var photo = new Photo
                 {
                     Id = Guid.NewGuid(),
                     Url = photoUrl,
                     CourseId = course.Id
                 };
-                
+
                 course.Photos.Add(photo);
             }
 
             var result = await _context.SaveChangesAsync(cancellationToken) > 0;
 
             return result
-                ? Result<Guid>.Success(course.Id) 
+                ? Result<Guid>.Success(course.Id)
                 : Result<Guid>.Failure("Failed to create course");
         }
+    }
+
+    public class CreateCourseCommandValidator : AbstractValidator<CreateCourseCommandRequest>
+    {
+        public CreateCourseCommandValidator()
+        {
+            RuleFor(x => x.createCourseRequest).SetValidator(new CreateCourseValidator());
+        }
+
     }
 }

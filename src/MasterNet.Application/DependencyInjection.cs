@@ -1,4 +1,9 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using MasterNet.Application.Courses.CreateCourse;
 using Microsoft.Extensions.DependencyInjection;
+using AutoMapper;
+using MasterNet.Application.Core;
 
 namespace MasterNet.Application;
 
@@ -13,6 +18,12 @@ public static class DependencyInjection
             .RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
         });
 
+        services.AddFluentValidationAutoValidation();
+        services.AddValidatorsFromAssemblyContaining<CreateCourseCommand>();
+
+        services.AddAutoMapper(config => {
+            config.AddProfile<MappingProfile>();
+        });
 
         return services;
     }
