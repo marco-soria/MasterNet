@@ -94,10 +94,11 @@ public static class DataSeedExtensions
             // Usuario Administrador
             var adminUser = new AppUser
             {
-                FullName = "System Administrator",
+                FullName = "Admin Admin",
                 UserName = "admin",
-                Email = "admin@masternet.com",
-                EmailConfirmed = true
+                Email = "admin@mgmain.com",
+                EmailConfirmed = true,
+                Degree = "Software Engineering"
             };
 
             var adminResult = await userManager.CreateAsync(adminUser, "Admin123$");
@@ -112,7 +113,7 @@ public static class DataSeedExtensions
             {
                 FullName = "John Smith",
                 UserName = "johnsmith",
-                Email = "john.smith@example.com",
+                Email = "johnsmith@gmail.com",
                 EmailConfirmed = true,
                 Degree = "Software Engineering"
             };
