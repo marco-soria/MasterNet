@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MasterNet.Persistence.Migrations
 {
     [DbContext(typeof(MasterNetDbContext))]
-    [Migration("20250902025831_AddIdentitySystem")]
-    partial class AddIdentitySystem
+    [Migration("20250903024141_InitialCleanMigration")]
+    partial class InitialCleanMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,29 +41,6 @@ namespace MasterNet.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("courses", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
-                            Description = "Master modern web development with ASP.NET Core, from basics to advanced concepts including MVC, Web API, and Entity Framework Core.",
-                            PublicationDate = new DateTime(2024, 1, 15, 10, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "Complete ASP.NET Core Web Development"
-                        },
-                        new
-                        {
-                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
-                            Description = "Deep dive into Entity Framework Core with advanced querying, performance optimization, and database design patterns.",
-                            PublicationDate = new DateTime(2024, 2, 20, 14, 30, 0, 0, DateTimeKind.Utc),
-                            Title = "Advanced Entity Framework Core"
-                        },
-                        new
-                        {
-                            Id = new Guid("33333333-3333-3333-3333-333333333333"),
-                            Description = "Learn to implement Clean Architecture principles in .NET applications for maintainable and scalable software.",
-                            PublicationDate = new DateTime(2024, 3, 10, 9, 15, 0, 0, DateTimeKind.Utc),
-                            Title = "Clean Architecture with .NET"
-                        });
                 });
 
             modelBuilder.Entity("MasterNet.Domain.CourseInstructor", b =>
@@ -127,22 +104,6 @@ namespace MasterNet.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("instructors", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("ffffffff-ffff-ffff-ffff-ffffffffffff"),
-                            Degree = "Master of Computer Science",
-                            FirstName = "John",
-                            LastName = "Anderson"
-                        },
-                        new
-                        {
-                            Id = new Guid("12345678-1234-1234-1234-123456789012"),
-                            Degree = "PhD in Software Engineering",
-                            FirstName = "Sarah",
-                            LastName = "Williams"
-                        });
                 });
 
             modelBuilder.Entity("MasterNet.Domain.Photo", b =>
@@ -189,22 +150,6 @@ namespace MasterNet.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("prices", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
-                            CurrentPrice = 49.99m,
-                            Name = "Basic Tier",
-                            PromotionalPrice = 39.99m
-                        },
-                        new
-                        {
-                            Id = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
-                            CurrentPrice = 99.99m,
-                            Name = "Standard Tier",
-                            PromotionalPrice = 79.99m
-                        });
                 });
 
             modelBuilder.Entity("MasterNet.Domain.Rating", b =>
@@ -332,22 +277,6 @@ namespace MasterNet.Persistence.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("app_roles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012",
-                            ConcurrencyStamp = "ADMIN-STAMP-12345",
-                            Name = "ADMIN",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "CLIENT-ROLE-ID-87654321-4321-4321-4321-210987654321",
-                            ConcurrencyStamp = "CLIENT-STAMP-54321",
-                            Name = "CLIENT",
-                            NormalizedName = "CLIENT"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -371,106 +300,6 @@ namespace MasterNet.Persistence.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("app_role_claims", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ClaimType = "POLICIES",
-                            ClaimValue = "COURSE_READ",
-                            RoleId = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ClaimType = "POLICIES",
-                            ClaimValue = "COURSE_WRITE",
-                            RoleId = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ClaimType = "POLICIES",
-                            ClaimValue = "COURSE_UPDATE",
-                            RoleId = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ClaimType = "POLICIES",
-                            ClaimValue = "COURSE_DELETE",
-                            RoleId = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ClaimType = "POLICIES",
-                            ClaimValue = "INSTRUCTOR_READ",
-                            RoleId = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ClaimType = "POLICIES",
-                            ClaimValue = "INSTRUCTOR_CREATE",
-                            RoleId = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            ClaimType = "POLICIES",
-                            ClaimValue = "INSTRUCTOR_UPDATE",
-                            RoleId = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            ClaimType = "POLICIES",
-                            ClaimValue = "COMMENT_READ",
-                            RoleId = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            ClaimType = "POLICIES",
-                            ClaimValue = "COMMENT_CREATE",
-                            RoleId = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            ClaimType = "POLICIES",
-                            ClaimValue = "COMMENT_DELETE",
-                            RoleId = "ADMIN-ROLE-ID-12345678-1234-1234-1234-123456789012"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            ClaimType = "POLICIES",
-                            ClaimValue = "COURSE_READ",
-                            RoleId = "CLIENT-ROLE-ID-87654321-4321-4321-4321-210987654321"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            ClaimType = "POLICIES",
-                            ClaimValue = "INSTRUCTOR_READ",
-                            RoleId = "CLIENT-ROLE-ID-87654321-4321-4321-4321-210987654321"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            ClaimType = "POLICIES",
-                            ClaimValue = "COMMENT_READ",
-                            RoleId = "CLIENT-ROLE-ID-87654321-4321-4321-4321-210987654321"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            ClaimType = "POLICIES",
-                            ClaimValue = "COMMENT_CREATE",
-                            RoleId = "CLIENT-ROLE-ID-87654321-4321-4321-4321-210987654321"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>

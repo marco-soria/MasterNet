@@ -3,12 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace MasterNet.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class AddIdentityTables : Migration
+    public partial class InitialCleanMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -52,6 +50,48 @@ namespace MasterNet.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_app_users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "courses",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    PublicationDate = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_courses", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "instructors",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    LastName = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
+                    FirstName = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
+                    Degree = table.Column<string>(type: "TEXT", maxLength: 300, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_instructors", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "prices",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "VARCHAR", maxLength: 250, nullable: false),
+                    CurrentPrice = table.Column<decimal>(type: "TEXT", precision: 10, scale: 2, nullable: false),
+                    PromotionalPrice = table.Column<decimal>(type: "TEXT", precision: 10, scale: 2, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_prices", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -160,34 +200,92 @@ namespace MasterNet.Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "app_roles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[,]
+            migrationBuilder.CreateTable(
+                name: "photos",
+                columns: table => new
                 {
-                    { "0bc6d645-46c9-4318-a4fa-175553e302ea", null, "CLIENT", "CLIENT" },
-                    { "d342281e-3be7-4bc1-ac77-91190d6e1a47", null, "ADMIN", "ADMIN" }
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Url = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: false),
+                    CourseId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_photos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_photos_courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "app_role_claims",
-                columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
-                values: new object[,]
+            migrationBuilder.CreateTable(
+                name: "ratings",
+                columns: table => new
                 {
-                    { 1, "POLICIES", "COURSE_READ", "d342281e-3be7-4bc1-ac77-91190d6e1a47" },
-                    { 2, "POLICIES", "COURSE_UPDATE", "d342281e-3be7-4bc1-ac77-91190d6e1a47" },
-                    { 3, "POLICIES", "COURSE_WRITE", "d342281e-3be7-4bc1-ac77-91190d6e1a47" },
-                    { 4, "POLICIES", "COURSE_DELETE", "d342281e-3be7-4bc1-ac77-91190d6e1a47" },
-                    { 5, "POLICIES", "INSTRUCTOR_CREATE", "d342281e-3be7-4bc1-ac77-91190d6e1a47" },
-                    { 6, "POLICIES", "INSTRUCTOR_READ", "d342281e-3be7-4bc1-ac77-91190d6e1a47" },
-                    { 7, "POLICIES", "INSTRUCTOR_UPDATE", "d342281e-3be7-4bc1-ac77-91190d6e1a47" },
-                    { 8, "POLICIES", "COMMENT_READ", "d342281e-3be7-4bc1-ac77-91190d6e1a47" },
-                    { 9, "POLICIES", "COMMENT_DELETE", "d342281e-3be7-4bc1-ac77-91190d6e1a47" },
-                    { 10, "POLICIES", "COMMENT_CREATE", "d342281e-3be7-4bc1-ac77-91190d6e1a47" },
-                    { 11, "POLICIES", "COURSE_READ", "0bc6d645-46c9-4318-a4fa-175553e302ea" },
-                    { 12, "POLICIES", "INSTRUCTOR_READ", "0bc6d645-46c9-4318-a4fa-175553e302ea" },
-                    { 13, "POLICIES", "COMMENT_READ", "0bc6d645-46c9-4318-a4fa-175553e302ea" },
-                    { 14, "POLICIES", "COMMENT_CREATE", "0bc6d645-46c9-4318-a4fa-175553e302ea" }
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Student = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false),
+                    Score = table.Column<int>(type: "INTEGER", nullable: false),
+                    Comment = table.Column<string>(type: "TEXT", nullable: true),
+                    CourseId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ratings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ratings_courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "course_instructors",
+                columns: table => new
+                {
+                    CourseId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    InstructorId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_course_instructors", x => new { x.InstructorId, x.CourseId });
+                    table.ForeignKey(
+                        name: "FK_course_instructors_courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_course_instructors_instructors_InstructorId",
+                        column: x => x.InstructorId,
+                        principalTable: "instructors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "course_prices",
+                columns: table => new
+                {
+                    CourseId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    PriceId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_course_prices", x => new { x.PriceId, x.CourseId });
+                    table.ForeignKey(
+                        name: "FK_course_prices_courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_course_prices_prices_PriceId",
+                        column: x => x.PriceId,
+                        principalTable: "prices",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -226,6 +324,36 @@ namespace MasterNet.Persistence.Migrations
                 table: "app_users",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CourseInstructor_CourseId",
+                table: "course_instructors",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CourseInstructor_InstructorId",
+                table: "course_instructors",
+                column: "InstructorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CoursePrice_CourseId",
+                table: "course_prices",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CoursePrice_PriceId",
+                table: "course_prices",
+                column: "PriceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Photos_CourseId",
+                table: "photos",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ratings_CourseId",
+                table: "ratings",
+                column: "CourseId");
         }
 
         /// <inheritdoc />
@@ -247,10 +375,31 @@ namespace MasterNet.Persistence.Migrations
                 name: "app_user_tokens");
 
             migrationBuilder.DropTable(
+                name: "course_instructors");
+
+            migrationBuilder.DropTable(
+                name: "course_prices");
+
+            migrationBuilder.DropTable(
+                name: "photos");
+
+            migrationBuilder.DropTable(
+                name: "ratings");
+
+            migrationBuilder.DropTable(
                 name: "app_roles");
 
             migrationBuilder.DropTable(
                 name: "app_users");
+
+            migrationBuilder.DropTable(
+                name: "instructors");
+
+            migrationBuilder.DropTable(
+                name: "prices");
+
+            migrationBuilder.DropTable(
+                name: "courses");
         }
     }
 }

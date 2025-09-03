@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterNet.Domain", "src\Mas
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterNet.Persistence", "src\MasterNet.Persistence\MasterNet.Persistence.csproj", "{47B789EC-8E6D-447D-A02C-356CD7E42C11}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterNet.Application", "src\MasterNet.Application\MasterNet.Application.csproj", "{472D80FD-FAEC-40B7-ABAD-5FED99D43DCC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,18 @@ Global
 		{47B789EC-8E6D-447D-A02C-356CD7E42C11}.Release|x64.Build.0 = Release|Any CPU
 		{47B789EC-8E6D-447D-A02C-356CD7E42C11}.Release|x86.ActiveCfg = Release|Any CPU
 		{47B789EC-8E6D-447D-A02C-356CD7E42C11}.Release|x86.Build.0 = Release|Any CPU
+		{472D80FD-FAEC-40B7-ABAD-5FED99D43DCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{472D80FD-FAEC-40B7-ABAD-5FED99D43DCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{472D80FD-FAEC-40B7-ABAD-5FED99D43DCC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{472D80FD-FAEC-40B7-ABAD-5FED99D43DCC}.Debug|x64.Build.0 = Debug|Any CPU
+		{472D80FD-FAEC-40B7-ABAD-5FED99D43DCC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{472D80FD-FAEC-40B7-ABAD-5FED99D43DCC}.Debug|x86.Build.0 = Debug|Any CPU
+		{472D80FD-FAEC-40B7-ABAD-5FED99D43DCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{472D80FD-FAEC-40B7-ABAD-5FED99D43DCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{472D80FD-FAEC-40B7-ABAD-5FED99D43DCC}.Release|x64.ActiveCfg = Release|Any CPU
+		{472D80FD-FAEC-40B7-ABAD-5FED99D43DCC}.Release|x64.Build.0 = Release|Any CPU
+		{472D80FD-FAEC-40B7-ABAD-5FED99D43DCC}.Release|x86.ActiveCfg = Release|Any CPU
+		{472D80FD-FAEC-40B7-ABAD-5FED99D43DCC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,5 +79,6 @@ Global
 		{403A98E3-040F-4CB1-B500-C7201B97021C} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{C351B76C-6C6B-4122-BA98-ACF63CF7B579} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{47B789EC-8E6D-447D-A02C-356CD7E42C11} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{472D80FD-FAEC-40B7-ABAD-5FED99D43DCC} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 	EndGlobalSection
 EndGlobal
