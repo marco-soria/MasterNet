@@ -40,6 +40,7 @@ public class GetCourseQuery
         {
             var course = await _context.Courses!
                 .Where(x => x.Id == request.Id)
+                .AsSplitQuery()
                 .ProjectTo<CourseDTO>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(cancellationToken);
 
