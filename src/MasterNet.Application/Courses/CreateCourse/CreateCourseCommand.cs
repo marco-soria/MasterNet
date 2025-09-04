@@ -14,18 +14,13 @@ public class CreateCourseCommand
     : IRequest<Result<Guid>>;
 
 
-    internal class CreateCourseCommandHandler
+    internal class CreateCourseCommandHandler(MasterNetDbContext context, IPhotoService photoService)
+
 
     : IRequestHandler<CreateCourseCommandRequest, Result<Guid>>
     {
-        private readonly MasterNetDbContext _context;
-        private readonly IPhotoService _photoService;
-
-        public CreateCourseCommandHandler(MasterNetDbContext context, IPhotoService photoService)
-        {
-            _context = context;
-            _photoService = photoService;
-        }
+        private readonly MasterNetDbContext _context = context;
+        private readonly IPhotoService _photoService = photoService;
 
         public async Task<Result<Guid>> Handle(
             CreateCourseCommandRequest request,

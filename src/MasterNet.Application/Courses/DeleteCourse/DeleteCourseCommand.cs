@@ -17,16 +17,10 @@ public class DeleteCourseCommand
     public record DeleteCourseCommandRequest(Guid? CourseId)
         : IRequest<Result<Unit>>;
 
-    internal class DeleteCourseCommandHandler : IRequestHandler<DeleteCourseCommandRequest, Result<Unit>>
+    internal class DeleteCourseCommandHandler(MasterNetDbContext context, IPhotoService photoService) : IRequestHandler<DeleteCourseCommandRequest, Result<Unit>>
     {
-        private readonly MasterNetDbContext _context;
-        private readonly IPhotoService _photoService;
-
-        public DeleteCourseCommandHandler(MasterNetDbContext context, IPhotoService photoService)
-        {
-            _context = context;
-            _photoService = photoService;
-        }
+        private readonly MasterNetDbContext _context = context;
+        private readonly IPhotoService _photoService = photoService;
 
         public async Task<Result<Unit>> Handle(
             DeleteCourseCommandRequest request, 
@@ -60,7 +54,7 @@ public class DeleteCourseCommand
                 .Where(ci => ci.CourseId == request.CourseId)
                 .ToListAsync(cancellationToken);
 
-            if (courseInstructors.Any())
+            if (courseInstructors.Count > 0)
             {
                 _context.Set<CourseInstructor>().RemoveRange(courseInstructors);
             }
@@ -69,7 +63,7 @@ public class DeleteCourseCommand
                 .Where(cp => cp.CourseId == request.CourseId)
                 .ToListAsync(cancellationToken);
 
-            if (coursePrices.Any())
+            if (coursePrices.Count > 0)
             {
                 _context.Set<CoursePrice>().RemoveRange(coursePrices);
             }
