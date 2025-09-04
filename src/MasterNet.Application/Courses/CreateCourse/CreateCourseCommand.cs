@@ -1,5 +1,6 @@
 using FluentValidation;
 using MasterNet.Application.Core;
+using MasterNet.Application.Interfaces;
 using MasterNet.Domain;
 using MasterNet.Persistence;
 using MediatR;
@@ -18,10 +19,12 @@ public class CreateCourseCommand
     : IRequestHandler<CreateCourseCommandRequest, Result<Guid>>
     {
         private readonly MasterNetDbContext _context;
+        private readonly IPhotoService _photoService;
 
-        public CreateCourseCommandHandler(MasterNetDbContext context)
+        public CreateCourseCommandHandler(MasterNetDbContext context, IPhotoService photoService)
         {
             _context = context;
+            _photoService = photoService;
         }
 
         public async Task<Result<Guid>> Handle(
@@ -38,13 +41,28 @@ public class CreateCourseCommand
             if (string.IsNullOrWhiteSpace(courseRequest.Description))
                 throw new ArgumentException("Course description is required");
 
+            var courseId = Guid.NewGuid();
             var course = new Course
             {
-                Id = Guid.NewGuid(),
+                Id = courseId,
                 Title = courseRequest.Title.Trim(),
                 Description = courseRequest.Description.Trim(),
                 PublicationDate = courseRequest.PublicationDate
             };
+
+            if (request.createCourseRequest.Photo is not null)
+            {
+                var photoUploadResult = await _photoService.AddPhoto(request.createCourseRequest.Photo);
+                var photo = new Photo
+                {
+                    Id = Guid.NewGuid(),
+                    Url = photoUploadResult.Url,
+                    PublicId = photoUploadResult.PublicId,
+                    CourseId = course.Id,
+                };
+                
+                course.Photos = new List<Photo> { photo };
+            }
 
             _context.Add(course);
 
@@ -66,23 +84,6 @@ public class CreateCourseCommand
                     .ToListAsync(cancellationToken);
 
                 course.Prices = prices;
-            }
-
-            // Manejar foto si se proporcionó
-            if (courseRequest.Photo != null)
-            {
-                // TODO: Implementar subida de archivo real con Cloudinary
-                // Por ahora, simulamos guardando el nombre del archivo
-                var photoUrl = $"/uploads/courses/{course.Id}/{courseRequest.Photo.FileName}";
-
-                var photo = new Photo
-                {
-                    Id = Guid.NewGuid(),
-                    Url = photoUrl,
-                    CourseId = course.Id
-                };
-
-                course.Photos.Add(photo);
             }
 
             var result = await _context.SaveChangesAsync(cancellationToken) > 0;

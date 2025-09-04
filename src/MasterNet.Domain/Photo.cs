@@ -12,6 +12,8 @@ public class Photo : BaseEntity
     /// </summary>
     public string Url { get; set; } = default!;
 
+    public string? PublicId { get; set; } 
+
     /// <summary>
     /// Clave foránea hacia el curso al que pertenece la foto.
     /// Es requerida - una foto siempre debe estar asociada a un curso.

@@ -138,6 +138,11 @@ public class MasterNetDbContext : IdentityDbContext<AppUser>
             .HasMaxLength(2000)
             .IsRequired();
 
+        modelBuilder.Entity<Photo>()
+            .Property(p => p.PublicId)
+            .HasMaxLength(500)
+            .IsRequired(false); // Nullable para compatibilidad con fotos existentes
+
         // Configuración para campos opcionales
         modelBuilder.Entity<Instructor>()
             .Property(i => i.Degree)
@@ -154,7 +159,7 @@ public class MasterNetDbContext : IdentityDbContext<AppUser>
             .HasMany(m => m.Photos)
             .WithOne(m => m.Course)
             .HasForeignKey(m => m.CourseId)
-            .IsRequired()
+            .IsRequired() // ✅ Una foto SIEMPRE debe estar asociada a un curso
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Course>()

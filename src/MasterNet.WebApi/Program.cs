@@ -1,5 +1,6 @@
 using MasterNet.Application;
 using MasterNet.Application.Interfaces;
+using MasterNet.Infrastructure.Photos;
 using MasterNet.Infrastructure.Reports;
 using MasterNet.Persistence;
 using MasterNet.Persistence.Extensions;
@@ -16,6 +17,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
+
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection(nameof(CloudinarySettings)));
+
+builder.Services.AddScoped<IPhotoService, PhotoService>();
 
 //builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped(typeof(IReportService<>), typeof(ReportService<>));

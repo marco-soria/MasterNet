@@ -489,3 +489,14 @@ $RECYCLE.BIN/
 *.db-wal
 LocalDatabase.db
 **/LocalDatabase.db
+
+# Configuration files with sensitive data - Cloudinary API keys
+# Ignore appsettings.json in src folder and all its subfolders (best practice)
+src/**/appsettings.json
+
+# But allow the template and development files
+!**/appsettings.Development.json
+!**/appsettings.template.json
+
+# Production settings (also sensitive)
+src/**/appsettings.Production.json

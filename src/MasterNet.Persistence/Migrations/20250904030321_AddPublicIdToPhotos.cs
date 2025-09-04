@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MasterNet.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class AddPublicIdToPhotos : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -206,6 +206,7 @@ namespace MasterNet.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Url = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: false),
+                    PublicId = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
                     CourseId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>

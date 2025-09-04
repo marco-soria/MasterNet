@@ -112,6 +112,10 @@ namespace MasterNet.Persistence.Migrations
                     b.Property<Guid>("CourseId")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("PublicId")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Url")
                         .IsRequired()
                         .HasMaxLength(2000)
