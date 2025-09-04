@@ -17,17 +17,11 @@ public class GetRatingsQuery
         public GetRatingsRequest? RatingsRequest {get;set;}
     }
 
-    internal class GetRatingsQueryHandler
-    : IRequestHandler<GetRatingsQueryRequest, Result<PagedList<RatingDTO>>>
+    internal class GetRatingsQueryHandler(MasterNetDbContext context, IMapper mapper)
+        : IRequestHandler<GetRatingsQueryRequest, Result<PagedList<RatingDTO>>>
     {
-        private readonly MasterNetDbContext _context;
-        private readonly IMapper _mapper;
-
-        public GetRatingsQueryHandler(MasterNetDbContext context, IMapper mapper)
-        {
-            _context = context;
-            _mapper = mapper;
-        }
+        private readonly MasterNetDbContext _context = context;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<Result<PagedList<RatingDTO>>> Handle(GetRatingsQueryRequest request, CancellationToken cancellationToken)
         {

@@ -19,17 +19,11 @@ public class GetCoursesQuery
         public GetCoursesRequest? CoursesRequest { get; set; }
     }
 
-    internal class GetCoursesQueryHandler
-    : IRequestHandler<GetCoursesQueryRequest, Result<PagedList<CourseDTO>>>
+    internal class GetCoursesQueryHandler(MasterNetDbContext context, IMapper mapper)
+        : IRequestHandler<GetCoursesQueryRequest, Result<PagedList<CourseDTO>>>
     {
-        private readonly MasterNetDbContext _context;
-        private readonly IMapper _mapper;
-
-        public GetCoursesQueryHandler(MasterNetDbContext context, IMapper mapper)
-        {
-            _context = context;
-            _mapper = mapper;
-        }
+        private readonly MasterNetDbContext _context = context;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<Result<PagedList<CourseDTO>>> Handle(
             GetCoursesQueryRequest request,

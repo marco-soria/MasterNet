@@ -16,17 +16,11 @@ public class UpdateCourseCommand
         Guid? CourseId
     ): IRequest<Result<Guid>>;
 
-    internal class UpdateCourseCommandHandler
-    : IRequestHandler<UpdateCourseCommandRequest, Result<Guid>>
+    internal class UpdateCourseCommandHandler(MasterNetDbContext context, IPhotoService photoService)
+        : IRequestHandler<UpdateCourseCommandRequest, Result<Guid>>
     {
-        private readonly MasterNetDbContext _context;
-        private readonly IPhotoService _photoService;
-
-        public UpdateCourseCommandHandler(MasterNetDbContext context, IPhotoService photoService)
-        {
-            _context = context;
-            _photoService = photoService;
-        }
+        private readonly MasterNetDbContext _context = context;
+        private readonly IPhotoService _photoService = photoService;
 
         public async Task<Result<Guid>> Handle(
             UpdateCourseCommandRequest request, 

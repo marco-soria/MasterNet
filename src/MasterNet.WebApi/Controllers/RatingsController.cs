@@ -7,14 +7,9 @@ namespace MasterNet.WebApi.Controllers;
 
 [ApiController]
 [Route("api/ratings")]
-public class RatingsController : ControllerBase
+public class RatingsController(ISender sender) : ControllerBase
 {
-    private readonly ISender _sender;
-
-    public RatingsController(ISender sender)
-    {
-        _sender = sender;
-    }
+    private readonly ISender _sender = sender;
 
     [HttpGet]
     public async Task<ActionResult> RatingPagination
@@ -26,8 +21,10 @@ public class RatingsController : ControllerBase
         var query = new GetRatingsQueryRequest {
             RatingsRequest = request
         };
-        var results =  await _sender.Send(query, cancellationToken);
-        return results.IsSuccess ? Ok(results.Value) : NotFound();
+        var results = await _sender.Send(query, cancellationToken);
+        
+        // ✅ Para colecciones vacías, devolver 200 OK con array vacío (no 404)
+        return results.IsSuccess ? Ok(results.Value) : BadRequest(results.Error);
     }
 
 }

@@ -21,17 +21,11 @@ public class GetCourseQuery
         public Guid Id {get;set;}
     }
 
-    internal class GetCourseQueryHandler
-    : IRequestHandler<GetCourseQueryRequest, Result<CourseDTO>>
+    internal class GetCourseQueryHandler(MasterNetDbContext context, IMapper mapper)
+        : IRequestHandler<GetCourseQueryRequest, Result<CourseDTO>>
     {
-        private readonly MasterNetDbContext _context;
-        private readonly IMapper _mapper;
-
-        public GetCourseQueryHandler(MasterNetDbContext context, IMapper mapper)
-        {
-            _context = context;
-            _mapper = mapper;
-        }
+        private readonly MasterNetDbContext _context = context;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<Result<CourseDTO>> Handle(
             GetCourseQueryRequest request, 

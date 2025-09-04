@@ -7,14 +7,9 @@ namespace MasterNet.WebApi.Controllers;
 
 [ApiController]
 [Route("api/instructors")]
-public class InstructorsController : ControllerBase
+public class InstructorsController(ISender sender) : ControllerBase
 {
-    private readonly ISender _sender;
-
-    public InstructorsController(ISender sender)
-    {
-        _sender = sender;
-    }
+    private readonly ISender _sender = sender;
 
     [HttpGet]
     public async Task<ActionResult> InstructorPagination
@@ -26,8 +21,10 @@ public class InstructorsController : ControllerBase
         var query = new GetInstructorsQueryRequest {
             InstructorRequest = request
         };
-        var results =  await _sender.Send(query, cancellationToken);
-        return results.IsSuccess ? Ok(results.Value) : NotFound();
+        var results = await _sender.Send(query, cancellationToken);
+        
+        // ✅ Para colecciones vacías, devolver 200 OK con array vacío (no 404)
+        return results.IsSuccess ? Ok(results.Value) : BadRequest(results.Error);
     }
 
 }

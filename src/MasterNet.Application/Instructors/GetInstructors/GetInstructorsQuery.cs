@@ -19,17 +19,11 @@ public class GetInstructorsQuery
     }
 
 
-    internal class GetInstructorsQueryHandler
-    : IRequestHandler<GetInstructorsQueryRequest, Result<PagedList<InstructorDTO>>>
+    internal class GetInstructorsQueryHandler(MasterNetDbContext context, IMapper mapper)
+        : IRequestHandler<GetInstructorsQueryRequest, Result<PagedList<InstructorDTO>>>
     {
-        private readonly MasterNetDbContext _context;
-        private readonly IMapper _mapper;
-
-        public GetInstructorsQueryHandler(MasterNetDbContext context, IMapper mapper)
-        {
-            _context = context;
-            _mapper = mapper;
-        }
+        private readonly MasterNetDbContext _context = context;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<Result<PagedList<InstructorDTO>>> Handle(
             GetInstructorsQueryRequest request, 

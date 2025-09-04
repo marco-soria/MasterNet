@@ -10,7 +10,7 @@ namespace MasterNet.Application.Courses.CreateCourse;
 
 public class CreateCourseCommand
 {
-    public record CreateCourseCommandRequest(CreateCourseRequest createCourseRequest)
+    public record CreateCourseCommandRequest(CreateCourseRequest CreateCourseRequest)
     : IRequest<Result<Guid>>;
 
 
@@ -32,7 +32,7 @@ public class CreateCourseCommand
             CancellationToken cancellationToken
         )
         {
-            var courseRequest = request.createCourseRequest;
+            var courseRequest = request.CreateCourseRequest;
 
             // Validar que datos requeridos estén presentes
             if (string.IsNullOrWhiteSpace(courseRequest.Title))
@@ -50,9 +50,9 @@ public class CreateCourseCommand
                 PublicationDate = courseRequest.PublicationDate
             };
 
-            if (request.createCourseRequest.Photo is not null)
+            if (request.CreateCourseRequest.Photo is not null)
             {
-                var photoUploadResult = await _photoService.AddPhoto(request.createCourseRequest.Photo);
+                var photoUploadResult = await _photoService.AddPhoto(request.CreateCourseRequest.Photo);
                 var photo = new Photo
                 {
                     Id = Guid.NewGuid(),
@@ -114,7 +114,7 @@ public class CreateCourseCommand
     {
         public CreateCourseCommandValidator()
         {
-            RuleFor(x => x.createCourseRequest).SetValidator(new CreateCourseValidator());
+            RuleFor(x => x.CreateCourseRequest).SetValidator(new CreateCourseValidator());
         }
 
     }

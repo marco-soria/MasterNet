@@ -17,17 +17,11 @@ public class GetPricesQuery
         public GetPricesRequest? PricesRequest {get;set;} 
     }
 
-    internal class GetPricesQueryHandler :
+    internal class GetPricesQueryHandler(MasterNetDbContext context, IMapper mapper) :
     IRequestHandler<GetPricesQueryRequest, Result<PagedList<PriceDTO>>>
     {
-        private readonly MasterNetDbContext _context;
-        private readonly IMapper _mapper;
-
-        public GetPricesQueryHandler(MasterNetDbContext context, IMapper mapper)
-        {
-            _context = context;
-            _mapper = mapper;
-        }
+        private readonly MasterNetDbContext _context = context;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<Result<PagedList<PriceDTO>>> Handle(
             GetPricesQueryRequest request, 
