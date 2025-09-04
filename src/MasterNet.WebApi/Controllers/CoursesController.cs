@@ -100,7 +100,7 @@ public class CoursesController(ISender sender) : ControllerBase
     }
     
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteCourse(
+    public async Task<ActionResult<Unit>> DeleteCourse(
         Guid id,
         CancellationToken cancellationToken
     )
