@@ -37,8 +37,6 @@ public class CourseExcelReportQuery
                 .OrderBy(c => c.PublicationDate ?? DateTime.MaxValue)  // Nulls al final
                 .ThenBy(c => c.Title)                                  // Orden alfabético como desempate
                 .ThenBy(c => c.Id)                                     // Garantiza orden único
-                .Take(10)
-                .Skip(0)
                 .ToListAsync(cancellationToken);
 
             return await _reportService.GetCsvReport(courses);

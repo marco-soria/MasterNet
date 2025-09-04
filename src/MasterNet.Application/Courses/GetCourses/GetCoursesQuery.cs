@@ -55,6 +55,9 @@ public class GetCoursesQuery
                 .Contains(request.CoursesRequest.Description.ToLower()));
             }
 
+            queryable = queryable.Where(predicate);
+
+            // Aplicar ordenamiento ANTES de la paginación para evitar warning Skip/Take
             if (!string.IsNullOrEmpty(request.CoursesRequest!.OrderBy))
             {
                 Expression<Func<Course, object>>? orderBySelector =
@@ -62,19 +65,24 @@ public class GetCoursesQuery
                                 {
                                     "title" => course => course.Title!,
                                     "description" => course => course.Description!,
+                                    "publicationDate" => course => course.PublicationDate!,
                                     _ => course => course.Title!
                                 };
 
-                bool orderBy = request.CoursesRequest.OrderAsc.HasValue
+                bool orderAsc = request.CoursesRequest.OrderAsc.HasValue
                             ? request.CoursesRequest.OrderAsc.Value
                             : true;
 
-                queryable = orderBy
+                queryable = orderAsc
                             ? queryable.OrderBy(orderBySelector)
                             : queryable.OrderByDescending(orderBySelector);
             }
-
-            queryable = queryable.Where(predicate);
+            else
+            {
+                // OrderBy por defecto para evitar warning Skip/Take sin OrderBy
+                // Orden alfabético por título, luego por fecha de publicación (ASC = orden cronológico)
+                queryable = queryable.OrderBy(x => x.Title).ThenBy(x => x.PublicationDate);
+            }
 
             var coursesQuery = queryable
             .AsSplitQuery()

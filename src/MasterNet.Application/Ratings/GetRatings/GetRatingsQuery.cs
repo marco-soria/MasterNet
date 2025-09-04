@@ -73,7 +73,8 @@ public class GetRatingsQuery
             else
             {
                 // OrderBy por defecto para evitar warning Skip/Take sin OrderBy
-                queryable = queryable.OrderBy(x => x.Student).ThenByDescending(x => x.Score);
+                // Orden alfabético por estudiante, luego por score (ASC = orden numérico)
+                queryable = queryable.OrderBy(x => x.Student).ThenBy(x => x.Score);
             }
 
             var RatingQuery = queryable
