@@ -1,3 +1,4 @@
+using MasterNet.Application.Core;
 using MasterNet.Application.Instructors.GetInstructors;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ public class InstructorsController(ISender sender) : ControllerBase
     private readonly ISender _sender = sender;
 
     [HttpGet]
-    public async Task<ActionResult> InstructorPagination
+    public async Task<ActionResult<PagedList<InstructorDTO>>> InstructorPagination
     (
         [FromQuery] GetInstructorsRequest request,
         CancellationToken cancellationToken

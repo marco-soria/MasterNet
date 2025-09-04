@@ -1,3 +1,4 @@
+using MasterNet.Application.Core;
 using MasterNet.Application.Ratings.GetRatings;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ public class RatingsController(ISender sender) : ControllerBase
     private readonly ISender _sender = sender;
 
     [HttpGet]
-    public async Task<ActionResult> RatingPagination
+    public async Task<ActionResult<PagedList<RatingDTO>>> RatingPagination
     (
         [FromQuery] GetRatingsRequest request,
         CancellationToken cancellationToken

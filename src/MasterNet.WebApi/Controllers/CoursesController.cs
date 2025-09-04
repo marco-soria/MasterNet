@@ -1,5 +1,6 @@
 using MasterNet.Application.Core;
 using MasterNet.Application.Courses.CreateCourse;
+using MasterNet.Application.Courses.GetCourse;
 using MasterNet.Application.Courses.GetCourses;
 using MasterNet.Application.Courses.UpdateCourse;
 using MediatR;
@@ -20,7 +21,7 @@ public class CoursesController(ISender sender) : ControllerBase
     private readonly ISender _sender = sender;
 
     [HttpGet]
-    public async Task<ActionResult> CoursesPagination(
+    public async Task<ActionResult<PagedList<CourseDTO>>> CoursesPagination(
         [FromQuery] GetCoursesRequest request,
         CancellationToken cancellationToken
     )
@@ -33,7 +34,7 @@ public class CoursesController(ISender sender) : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetCourse(
+    public async Task<ActionResult<CourseDTO>> GetCourse(
         Guid id,
         CancellationToken cancellationToken
     )

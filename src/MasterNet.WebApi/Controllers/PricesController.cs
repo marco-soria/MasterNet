@@ -1,3 +1,4 @@
+using MasterNet.Application.Core;
 using MasterNet.Application.Prices.GetPrices;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ public class PricesController(ISender sender) : ControllerBase
     private readonly ISender _sender = sender;
 
     [HttpGet]
-    public async Task<ActionResult> PricePagination
+    public async Task<ActionResult<PagedList<PriceDTO>>> PricePagination
     (
         [FromQuery] GetPricesRequest request,
         CancellationToken cancellationToken
