@@ -4,6 +4,7 @@ using MasterNet.Application.Courses.GetCourse;
 using MasterNet.Application.Courses.GetCourses;
 using MasterNet.Application.Courses.UpdateCourse;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static MasterNet.Application.Courses.CourseExcelReport.CourseExcelReportQuery;
 using static MasterNet.Application.Courses.CreateCourse.CreateCourseCommand;
@@ -15,6 +16,7 @@ using static MasterNet.Application.Courses.UpdateCourse.UpdateCourseCommand;
 namespace MasterNet.WebApi.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/courses")]
 public class CoursesController(ISender sender) : ControllerBase
 {
