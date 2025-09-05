@@ -12,8 +12,8 @@ namespace MasterNet.Application.Accounts.Register;
 public class RegisterCommand
 {
 
-    public record RegisterCommandRequest(RegisterRequest registerRequest)
-    : IRequest<Result<Profile>>;
+    public record RegisterCommandRequest(RegisterRequest RegisterRequest)
+    : IRequest<Result<Profile>>, IBaseCommand;
 
 
     internal class RegisterCommandHandler(
@@ -30,28 +30,28 @@ public class RegisterCommand
         {
            
             if(await  _userManager.Users
-            .AnyAsync(x=> x.Email == request.registerRequest.Email))
+            .AnyAsync(x=> x.Email == request.RegisterRequest.Email))
             {
                 return Result<Profile>.Failure("The email is already registered by another user");
             }
 
             if(await _userManager.Users
-            .AnyAsync(x=>x.UserName == request.registerRequest.UserName))
+            .AnyAsync(x=>x.UserName == request.RegisterRequest.UserName))
             {
                 return Result<Profile>.Failure("The username is already registered");
             }
 
              var user = new AppUser
              {
-                FullName = request.registerRequest.FullName!,
+                FullName = request.RegisterRequest.FullName!,
                 Id = Guid.NewGuid().ToString(),
-                Degree = request.registerRequest.Degree,
-                Email = request.registerRequest.Email,
-                UserName  = request.registerRequest.UserName
+                Degree = request.RegisterRequest.Degree,
+                Email = request.RegisterRequest.Email,
+                UserName  = request.RegisterRequest.UserName
              };
            
             var result =  await _userManager
-            .CreateAsync(user, request.registerRequest.Password!);
+            .CreateAsync(user, request.RegisterRequest.Password!);
 
             if(result.Succeeded)
             {
@@ -76,7 +76,7 @@ public class RegisterCommand
     {
         public RegisterCommandRequestValidator()
         {
-            RuleFor(x => x.registerRequest).SetValidator(new RegisterValidator());
+            RuleFor(x => x.RegisterRequest).SetValidator(new RegisterValidator());
         }
     }
 

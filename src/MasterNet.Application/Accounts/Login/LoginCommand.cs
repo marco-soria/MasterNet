@@ -15,7 +15,7 @@ namespace MasterNet.Application.Accounts.Login;
 public class LoginCommand
 {
     public record LoginCommandRequest(LoginRequest LoginRequest, HttpContext? HttpContext = null)
-        : IRequest<Result<Profile>>;
+        : IRequest<Result<Profile>>, IBaseCommand;
 
     internal class LoginCommandHandler(
         UserManager<AppUser> userManager,

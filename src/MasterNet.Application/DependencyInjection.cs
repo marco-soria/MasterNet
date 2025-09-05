@@ -1,8 +1,5 @@
 using FluentValidation;
-using FluentValidation.AspNetCore;
-using MasterNet.Application.Courses.CreateCourse;
 using Microsoft.Extensions.DependencyInjection;
-using AutoMapper;
 using MasterNet.Application.Core;
 
 namespace MasterNet.Application;
@@ -13,13 +10,17 @@ public static class DependencyInjection
         this IServiceCollection services
     )
     {
-        services.AddMediatR(configuration => {
+        services.AddMediatR(configuration =>
+        {
             configuration
             .RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+            
+            configuration.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
 
-        services.AddFluentValidationAutoValidation();
-        services.AddValidatorsFromAssemblyContaining<CreateCourseCommand>();
+        //services.AddFluentValidationAutoValidation();
+        //services.AddValidatorsFromAssemblyContaining<CreateCourseCommand>();
+        services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
         services.AddAutoMapper(config => {
             config.AddProfile<MappingProfile>();

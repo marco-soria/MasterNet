@@ -15,7 +15,7 @@ namespace MasterNet.Application.Courses.DeleteCourse;
 public class DeleteCourseCommand
 {
     public record DeleteCourseCommandRequest(Guid? CourseId)
-        : IRequest<Result<Unit>>;
+        : IRequest<Result<Unit>>, IBaseCommand;
 
     internal class DeleteCourseCommandHandler(MasterNetDbContext context, IPhotoService photoService) : IRequestHandler<DeleteCourseCommandRequest, Result<Unit>>
     {

@@ -11,7 +11,7 @@ namespace MasterNet.Application.Courses.CreateCourse;
 public class CreateCourseCommand
 {
     public record CreateCourseCommandRequest(CreateCourseRequest CreateCourseRequest)
-    : IRequest<Result<Guid>>;
+    : IRequest<Result<Guid>>, IBaseCommand;
 
 
     internal class CreateCourseCommandHandler(MasterNetDbContext context, IPhotoService photoService)
@@ -56,7 +56,7 @@ public class CreateCourseCommand
                     CourseId = course.Id,
                 };
                 
-                course.Photos = new List<Photo> { photo };
+                course.Photos = [photo];
             }
 
             _context.Add(course);

@@ -14,7 +14,7 @@ public class UpdateCourseCommand
     public record UpdateCourseCommandRequest(
         UpdateCourseRequest UpdateCourseRequest, 
         Guid? CourseId
-    ): IRequest<Result<Guid>>;
+    ): IRequest<Result<Guid>>, IBaseCommand;
 
     internal class UpdateCourseCommandHandler(MasterNetDbContext context, IPhotoService photoService)
         : IRequestHandler<UpdateCourseCommandRequest, Result<Guid>>
@@ -39,19 +39,24 @@ public class UpdateCourseCommand
             }
 
             // ✅ ACTUALIZACIÓN PARCIAL - Solo actualizar campos proporcionados
+            var hasUpdates = false; // Track if any updates were made
+            
             if (!string.IsNullOrWhiteSpace(request.UpdateCourseRequest.Title))
             {
                 course.Title = request.UpdateCourseRequest.Title.Trim();
+                hasUpdates = true;
             }
 
             if (!string.IsNullOrWhiteSpace(request.UpdateCourseRequest.Description))
             {
                 course.Description = request.UpdateCourseRequest.Description.Trim();
+                hasUpdates = true;
             }
 
             if (request.UpdateCourseRequest.PublicationDate.HasValue)
             {
                 course.PublicationDate = request.UpdateCourseRequest.PublicationDate;
+                hasUpdates = true;
             }
 
             // ✅ MANEJO DE FOTO - Usar operaciones directas en DbContext
@@ -88,6 +93,7 @@ public class UpdateCourseCommand
                 
                 // Agregar nueva foto directamente al contexto
                 await _context.Set<Photo>().AddAsync(newPhoto, cancellationToken);
+                hasUpdates = true;
 
                 /* 
                 // 📚 IMPLEMENTACIÓN ALTERNATIVA: MÚLTIPLES FOTOS (COMENTADA)
@@ -141,6 +147,7 @@ public class UpdateCourseCommand
                     }).ToList();
 
                 await _context.Set<CourseInstructor>().AddRangeAsync(newInstructorRelations, cancellationToken);
+                hasUpdates = true;
             }
 
             // ✅ ACTUALIZAR PRECIOS - Usar operaciones directas en DbContext
@@ -177,6 +184,18 @@ public class UpdateCourseCommand
                     }).ToList();
 
                 await _context.Set<CoursePrice>().AddRangeAsync(newPriceRelations, cancellationToken);
+                hasUpdates = true;
+            }
+
+            // ✅ VERIFICAR QUE SE HICIERON CAMBIOS ANTES DE GUARDAR
+            if (!hasUpdates)
+            {
+                // Lanzar ValidationException para que el ExceptionMiddleware la formatee correctamente
+                var errors = new List<ValidationError>
+                {
+                    new("UpdateRequest", "No valid fields provided for update. Title and Description cannot be empty or whitespace-only.")
+                };
+                throw new MasterNet.Application.Core.ValidationException(errors);
             }
 
             var result = await _context.SaveChangesAsync(cancellationToken) > 0;
