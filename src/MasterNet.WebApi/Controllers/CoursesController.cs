@@ -3,6 +3,7 @@ using MasterNet.Application.Courses.CreateCourse;
 using MasterNet.Application.Courses.GetCourse;
 using MasterNet.Application.Courses.GetCourses;
 using MasterNet.Application.Courses.UpdateCourse;
+using MasterNet.Domain.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,6 @@ using static MasterNet.Application.Courses.UpdateCourse.UpdateCourseCommand;
 namespace MasterNet.WebApi.Controllers;
 
 [ApiController]
-[Authorize]
 [Route("api/courses")]
 public class CoursesController(ISender sender) : ControllerBase
 {
@@ -55,6 +55,8 @@ public class CoursesController(ISender sender) : ControllerBase
         byte[] excelBytes = result.ToArray();
         return File(excelBytes, "text/csv", "courses.csv");
     }
+
+    [Authorize(Policy = PolicyMaster.COURSE_WRITE)]
     [HttpPost]
     public async Task<ActionResult<Result<Guid>>> CreateCourse(
         [FromForm] CreateCourseRequest request,
@@ -66,7 +68,7 @@ public class CoursesController(ISender sender) : ControllerBase
         
         if (result.IsSuccess)
         {
-            // ✅ 201 Created con Location header apuntando al nuevo recurso
+            // ✅ 201 Created con Location header apuntando al nuevo recOURSE
             return CreatedAtAction(
                 nameof(GetCourse), 
                 new { id = result.Value }, 
@@ -77,6 +79,7 @@ public class CoursesController(ISender sender) : ControllerBase
         return BadRequest(result.Error);
     }
 
+    [Authorize(Policy = PolicyMaster.COURSE_UPDATE)]
     [HttpPut("{id}")]
     public async Task<ActionResult<Result<Guid>>> UpdateCourse(
         [FromForm] UpdateCourseRequest request,  // ✅ FromForm para manejar archivos
@@ -101,6 +104,7 @@ public class CoursesController(ISender sender) : ControllerBase
         return BadRequest(result.Error);
     }
     
+    [Authorize(Policy =PolicyMaster.COURSE_DELETE)]
     [HttpDelete("{id}")]
     public async Task<ActionResult<Unit>> DeleteCourse(
         Guid id,
