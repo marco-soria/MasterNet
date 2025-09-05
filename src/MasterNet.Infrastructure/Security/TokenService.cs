@@ -45,7 +45,8 @@ public class TokenService(MasterNetDbContext context, IConfiguration configurati
         {
             new(ClaimTypes.Name, user.UserName!),
             new(ClaimTypes.NameIdentifier, user.Id),
-            new(ClaimTypes.Email, user.Email!)
+            new(ClaimTypes.Email, user.Email!),
+            new(ClaimTypes.GivenName, user.FullName) // ✅ Agregamos FullName a los claims
         };
 
         foreach(var policy in policies)

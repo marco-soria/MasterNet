@@ -12,6 +12,10 @@ using static MasterNet.Application.Accounts.Login.LoginCommand;
 using static MasterNet.Application.Features.Account.Commands.RefreshTokenCommand;
 using static MasterNet.Application.Features.Account.Commands.RevokeTokenCommand;
 using static MasterNet.Application.Features.Account.Commands.RevokeAllUserTokensCommand;
+using MasterNet.Application.Accounts.Register;
+using static MasterNet.Application.Accounts.Register.RegisterCommand;
+using MasterNet.Application.Accounts.GetCurrentUser;
+using static MasterNet.Application.Accounts.GetCurrentUser.GetCurrentUserQuery;
 
 namespace MasterNet.WebApi.Controllers;
 
@@ -41,6 +45,53 @@ public class AccountController(ISender sender, IUserAccessor userAccessor) : Con
         return result.IsSuccess 
             ? Ok(result.Value) 
             : Unauthorized(result.Error);
+    }
+
+    /// <summary>
+    /// 📝 Registro de nuevo usuario con rol CLIENT y token incluido
+    /// </summary>
+    [HttpPost("register")]
+    public async Task<ActionResult<Profile>> Register(
+        [FromBody] RegisterRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var command = new RegisterCommandRequest(request);
+        var result = await _sender.Send(command, cancellationToken);
+        return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+    }
+
+    /// <summary>
+    /// 👤 Obtener perfil del usuario actual con información actualizada
+    /// </summary>
+    [Authorize]
+    [HttpGet("me")]
+    public async Task<ActionResult<Profile>> GetCurrentUser(CancellationToken cancellationToken)
+    {
+        var email = _userAccessor.GetUserEmail();
+        
+        if (string.IsNullOrEmpty(email))
+        {
+            return Unauthorized("User email not found in token");
+        }
+        
+        var request = new GetCurrentUserRequest { Email = email };
+        var query = new GetCurrentUserQueryRequest(request);
+        var result = await _sender.Send(query, cancellationToken);
+        
+        if (!result.IsSuccess)
+        {
+            return Unauthorized(result.Error);
+        }
+
+        // Por seguridad, no incluir token en respuesta de /me
+        // Si necesitas token renovado, usa /refresh
+        var profile = result.Value!;
+        profile.Token = null;
+        profile.RefreshToken = null;
+        profile.TokenExpiresAt = null;
+
+        return Ok(profile);
     }
 
     /// <summary>
@@ -97,30 +148,5 @@ public class AccountController(ISender sender, IUserAccessor userAccessor) : Con
         return result.IsSuccess
             ? Ok(new { message = "All sessions logged out successfully" })
             : BadRequest(result.Error);
-    }
-
-    /// <summary>
-    /// 👤 Obtener perfil del usuario actual
-    /// </summary>
-    [Authorize]
-    [HttpGet("me")]
-    public ActionResult<Profile> GetCurrentUser()
-    {
-        var userName = _userAccessor.GetUserName();
-        var userEmail = _userAccessor.GetUserEmail();
-        
-        if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(userEmail))
-        {
-            return Unauthorized("User not found");
-        }
-
-        var profile = new Profile
-        {
-            Email = userEmail,
-            UserName = userName
-            // No incluimos tokens aquí por seguridad
-        };
-
-        return Ok(profile);
     }
 }
