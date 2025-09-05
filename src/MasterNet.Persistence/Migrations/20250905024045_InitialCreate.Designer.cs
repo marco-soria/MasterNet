@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MasterNet.Persistence.Migrations
 {
     [DbContext(typeof(MasterNetDbContext))]
-    [Migration("20250905014338_InitialCreate")]
+    [Migration("20250905024045_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

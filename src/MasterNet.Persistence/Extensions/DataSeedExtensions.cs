@@ -27,21 +27,20 @@ public static class DataSeedExtensions
     {
         try
         {
-            // Verificación rápida: si ya hay cursos, asumimos que el seed ya se ejecutó
+            // 🚀 CRÍTICO: Siempre verificar roles y claims para JWT tokens
+            // Los role claims son esenciales para que funcionen los policies en tokens
+            await SeedRolesAsync(roleManager, logger);
+            await SeedEssentialUsersAsync(userManager, roleManager, logger);
+
+            // Verificación rápida: si ya hay cursos, asumimos que el seed de datos ya se ejecutó
             var hasData = await context.Courses!.AnyAsync();
             if (hasData)
             {
-                logger.LogInformation("Data already exists. Skipping seed.");
+                logger.LogInformation("Domain data already exists. Skipping domain data seed.");
                 return;
             }
 
-            logger.LogInformation("No data found. Starting seed process...");
-
-            // Seed roles - SIEMPRE necesario (todos los environments)
-            await SeedRolesAsync(roleManager, logger);
-
-            // Seed usuario admin esencial - SIEMPRE necesario para acceso inicial
-            await SeedEssentialUsersAsync(userManager, roleManager, logger);
+            logger.LogInformation("No domain data found. Starting domain data seed process...");
 
             // Seed de datos según environment
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -142,36 +141,104 @@ public static class DataSeedExtensions
 
     private static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager, ILogger logger)
     {
-        logger.LogInformation("Seeding roles...");
+        logger.LogInformation("🔐 Verifying roles and policy claims...");
 
-        // Crear rol ADMIN si no existe
-        if (!await roleManager.RoleExistsAsync(CustomRoles.ADMIN))
+        // 🎯 ESTRATEGIA: Verificar roles y claims de forma inteligente
+        // - Crear roles si no existen
+        // - Siempre verificar que los claims estén completos (crítico para JWT)
+        // - No duplicar claims existentes
+
+        await EnsureRoleWithClaims(roleManager, CustomRoles.ADMIN, logger);
+        await EnsureRoleWithClaims(roleManager, CustomRoles.CLIENT, logger);
+    }
+
+    /// <summary>
+    /// Garantiza que un rol existe y tiene todos los claims necesarios.
+    /// Método inteligente que no duplica trabajo innecesario.
+    /// </summary>
+    private static async Task EnsureRoleWithClaims(RoleManager<IdentityRole> roleManager, string roleName, ILogger logger)
+    {
+        // Paso 1: Asegurar que el rol existe
+        var role = await roleManager.FindByNameAsync(roleName);
+        if (role == null)
         {
-            var adminRole = new IdentityRole(CustomRoles.ADMIN);
-            var result = await roleManager.CreateAsync(adminRole);
+            role = new IdentityRole(roleName);
+            var result = await roleManager.CreateAsync(role);
             if (result.Succeeded)
             {
-                logger.LogInformation($"Role {CustomRoles.ADMIN} created successfully");
+                logger.LogInformation($"✅ Role '{roleName}' created successfully");
             }
             else
             {
-                logger.LogError($"Failed to create role {CustomRoles.ADMIN}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                logger.LogError($"❌ Failed to create role '{roleName}': {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                return;
             }
         }
 
-        // Crear rol CLIENT si no existe
-        if (!await roleManager.RoleExistsAsync(CustomRoles.CLIENT))
+        // Paso 2: Verificar y agregar claims necesarios
+        await AddPolicyClaimsToRole(roleManager, role, logger);
+    }
+
+    /// <summary>
+    /// Agrega claims de políticas a un rol específico de forma inteligente.
+    /// Solo agrega los claims que faltan, no duplica los existentes.
+    /// </summary>
+    private static async Task AddPolicyClaimsToRole(RoleManager<IdentityRole> roleManager, IdentityRole role, ILogger logger)
+    {
+        // Obtener claims existentes una sola vez
+        var existingClaims = await roleManager.GetClaimsAsync(role);
+        var existingPolicyValues = existingClaims
+            .Where(c => c.Type == CustomClaims.POLICIES)
+            .Select(c => c.Value)
+            .ToHashSet();
+
+        string[] requiredPolicies = role.Name switch
         {
-            var clientRole = new IdentityRole(CustomRoles.CLIENT);
-            var result = await roleManager.CreateAsync(clientRole);
-            if (result.Succeeded)
+            CustomRoles.ADMIN => new[]
             {
-                logger.LogInformation($"Role {CustomRoles.CLIENT} created successfully");
-            }
-            else
+                PolicyMaster.COURSE_WRITE,
+                PolicyMaster.COURSE_READ,
+                PolicyMaster.COURSE_UPDATE,
+                PolicyMaster.COURSE_DELETE,
+                PolicyMaster.INSTRUCTOR_READ,
+                PolicyMaster.INSTRUCTOR_UPDATE,
+                PolicyMaster.INSTRUCTOR_CREATE,
+                PolicyMaster.COMMENT_READ,
+                PolicyMaster.COMMENT_DELETE,
+                PolicyMaster.COMMENT_CREATE
+            },
+            CustomRoles.CLIENT => new[]
             {
-                logger.LogError($"Failed to create role {CustomRoles.CLIENT}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                PolicyMaster.COURSE_READ,
+                PolicyMaster.INSTRUCTOR_READ,
+                PolicyMaster.COMMENT_READ,
+                PolicyMaster.COMMENT_CREATE
+            },
+            _ => Array.Empty<string>()
+        };
+
+        var missingPolicies = requiredPolicies.Except(existingPolicyValues).ToList();
+
+        if (missingPolicies.Any())
+        {
+            logger.LogInformation($"🔧 Adding {missingPolicies.Count} missing policy claims to role '{role.Name}'...");
+            
+            foreach (var policy in missingPolicies)
+            {
+                var claimResult = await roleManager.AddClaimAsync(role, new System.Security.Claims.Claim(CustomClaims.POLICIES, policy));
+                if (claimResult.Succeeded)
+                {
+                    logger.LogInformation($"  ✅ Added policy '{policy}' to role {role.Name}");
+                }
+                else
+                {
+                    logger.LogError($"  ❌ Failed to add policy '{policy}' to role {role.Name}");
+                }
             }
+        }
+        else
+        {
+            logger.LogInformation($"✅ Role '{role.Name}' already has all required policy claims ({requiredPolicies.Length} policies)");
         }
     }
 
