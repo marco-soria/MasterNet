@@ -36,6 +36,10 @@ builder.Services.AddControllers();
 
 builder.Services.AddSwaggerDocumentation();
 
+builder.Services.AddCors(o => o.AddPolicy("cors-app", builder => {
+    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
+
 
 
 var app = builder.Build();
@@ -48,6 +52,8 @@ app.useSwaggerDocumentation();
 //app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseCors("cors-app");
 
 // Database initialization and seeding
 using var scope = app.Services.CreateScope();
