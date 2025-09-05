@@ -1,4 +1,4 @@
-namespace MasterNet.Domain;
+namespace MasterNet.Domain.Security;
 
 /// <summary>
 /// Definición de Claims (Reclamos/Afirmaciones) personalizados para el sistema de autorización.

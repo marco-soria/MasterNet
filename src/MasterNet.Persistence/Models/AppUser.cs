@@ -1,3 +1,4 @@
+using MasterNet.Domain.Security;
 using Microsoft.AspNetCore.Identity;
 
 namespace MasterNet.Persistence.Models;
@@ -26,6 +27,12 @@ public class AppUser : IdentityUser
     /// Ejemplos: "Computer Science Degree", "Master in Software Engineering", null
     /// </summary>
     public string? Degree { get; set; }
+
+    /// <summary>
+    /// Colección de refresh tokens asociados al usuario.
+    /// Permite manejar múltiples sesiones activas (diferentes dispositivos).
+    /// </summary>
+    public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 
     // NOTA: IdentityUser ya incluye estas propiedades heredadas:
     // - Id (string): Identificador único del usuario

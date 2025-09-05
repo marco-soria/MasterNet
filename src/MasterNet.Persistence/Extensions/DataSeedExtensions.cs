@@ -1,4 +1,5 @@
 using MasterNet.Domain;
+using MasterNet.Domain.Security;
 using MasterNet.Persistence.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -131,7 +132,7 @@ public static class DataSeedExtensions
         {
             await userManager.AddToRoleAsync(adminUser, CustomRoles.ADMIN);
             logger.LogInformation("Essential admin user created successfully");
-            logger.LogInformation("Login credentials - Email: admin@masternet.com, Password: Admin123$");
+            logger.LogInformation("Login credentials - Email: admin@gmail.com, Password: Admin123$");
         }
         else
         {

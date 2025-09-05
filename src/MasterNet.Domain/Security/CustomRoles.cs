@@ -1,4 +1,4 @@
-namespace MasterNet.Domain;
+namespace MasterNet.Domain.Security;
 
 /// <summary>
 /// Definición de Roles personalizados para el sistema de autorización.

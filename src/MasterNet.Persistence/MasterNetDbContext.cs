@@ -1,4 +1,5 @@
 using MasterNet.Domain;
+using MasterNet.Domain.Security;
 using MasterNet.Persistence.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -58,15 +59,9 @@ public class MasterNetDbContext : IdentityDbContext<AppUser>
         // - AspNetUserLogins (logins externos como Google, Facebook)
         // - AspNetUserTokens (tokens de reset password, etc.)
 
-        // CONFIGURACIÓN PERSONALIZADA DE IDENTITY TABLES
-        // Personalizar nombres de tablas de Identity para consistencia con nuestro esquema
-        modelBuilder.Entity<AppUser>().ToTable("app_users");
-        modelBuilder.Entity<IdentityRole>().ToTable("app_roles");
-        modelBuilder.Entity<IdentityUserRole<string>>().ToTable("app_user_roles");
-        modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("app_user_claims");
-        modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("app_role_claims");
-        modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("app_user_logins");
-        modelBuilder.Entity<IdentityUserToken<string>>().ToTable("app_user_tokens");
+        // ✅ MANTENER NOMBRES ESTÁNDAR DE IDENTITY TABLES
+        // Los nombres AspNetUsers, AspNetRoles, etc. son la convención estándar y se mantienen
+        // para compatibilidad con documentación, herramientas y mejores prácticas
 
         // CONFIGURACIÓN DE CAMPOS PERSONALIZADOS DE APPUSER
         // Configurar las propiedades adicionales que agregamos a AppUser
@@ -79,6 +74,48 @@ public class MasterNetDbContext : IdentityDbContext<AppUser>
             .Property(u => u.Degree)
             .HasMaxLength(300)
             .IsRequired(false); // Es opcional como definimos
+
+        // CONFIGURACIÓN DE REFRESH TOKENS
+        modelBuilder.Entity<RefreshToken>()
+            .Property(rt => rt.Token)
+            .HasMaxLength(500)
+            .IsRequired();
+
+        modelBuilder.Entity<RefreshToken>()
+            .Property(rt => rt.RevokedReason)
+            .HasMaxLength(200)
+            .IsRequired(false);
+
+        modelBuilder.Entity<RefreshToken>()
+            .Property(rt => rt.IpAddress)
+            .HasMaxLength(45) // IPv6 max length
+            .IsRequired(false);
+
+        modelBuilder.Entity<RefreshToken>()
+            .Property(rt => rt.UserAgent)
+            .HasMaxLength(500)
+            .IsRequired(false);
+
+        // Relación AppUser -> RefreshTokens (One-to-Many)
+        modelBuilder.Entity<AppUser>()
+            .HasMany(u => u.RefreshTokens)
+            .WithOne()
+            .HasForeignKey(rt => rt.UserId)
+            .OnDelete(DeleteBehavior.Cascade); // Si se elimina el usuario, se eliminan sus tokens
+
+        // Índices para refresh tokens
+        modelBuilder.Entity<RefreshToken>()
+            .HasIndex(rt => rt.Token)
+            .IsUnique()
+            .HasDatabaseName("IX_RefreshToken_Token");
+
+        modelBuilder.Entity<RefreshToken>()
+            .HasIndex(rt => rt.UserId)
+            .HasDatabaseName("IX_RefreshToken_UserId");
+
+        modelBuilder.Entity<RefreshToken>()
+            .HasIndex(rt => rt.ExpiresAt)
+            .HasDatabaseName("IX_RefreshToken_ExpiresAt");
 
         // CONFIGURACIÓN DE NOMBRES DE TABLAS DE ENTIDADES DE DOMINIO
         // ToTable() permite especificar el nombre exacto de la tabla en la base de datos

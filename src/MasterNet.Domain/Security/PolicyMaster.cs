@@ -1,4 +1,4 @@
-namespace MasterNet.Domain;
+namespace MasterNet.Domain.Security;
 
 /// <summary>
 /// Definición de Políticas de autorización para el sistema.
