@@ -14,7 +14,7 @@ namespace MasterNet.Application.Accounts.Login;
 
 public class LoginCommand
 {
-    public record LoginCommandRequest(LoginRequest LoginRequest, HttpContext? HttpContext = null)
+    public record LoginCommandRequest(LoginRequest loginRequest, HttpContext? httpContext = null)
         : IRequest<Result<Profile>>, IBaseCommand;
 
     internal class LoginCommandHandler(
@@ -34,7 +34,7 @@ public class LoginCommand
         )
         {
             var user = await _userManager.Users
-                .FirstOrDefaultAsync(x => x.Email == request.LoginRequest.Email);
+                .FirstOrDefaultAsync(x => x.Email == request.loginRequest.Email);
 
             if (user is null)
             {
@@ -42,7 +42,7 @@ public class LoginCommand
             }
 
             var result = await _userManager
-                .CheckPasswordAsync(user, request.LoginRequest.Password!);
+                .CheckPasswordAsync(user, request.loginRequest.Password!);
 
             if (!result)
             {
@@ -53,9 +53,9 @@ public class LoginCommand
             var accessToken = await _tokenService.CreateToken(user);
             
             // Obtener IP y User-Agent del contexto HTTP si está disponible
-            var ipAddress = request.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "unknown";
-            var userAgent = request.HttpContext?.Request?.Headers["User-Agent"].ToString();
-            
+            var ipAddress = request.httpContext?.Connection?.RemoteIpAddress?.ToString() ?? "unknown";
+            var userAgent = request.httpContext?.Request?.Headers["User-Agent"].ToString();
+
             var refreshToken = _tokenService.GenerateRefreshToken(ipAddress, userAgent);
             refreshToken.UserId = user.Id;
 
@@ -81,7 +81,7 @@ public class LoginCommand
     {
         public LoginCommandRequestValidator()
         {
-            RuleFor(x => x.LoginRequest).SetValidator(new LoginValidator());
+            RuleFor(x => x.loginRequest).SetValidator(new LoginValidator());
         }
     }
 }
