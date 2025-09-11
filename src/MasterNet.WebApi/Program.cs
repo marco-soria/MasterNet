@@ -55,24 +55,8 @@ app.UseAuthorization();
 
 app.UseCors("cors-app");
 
-// Database initialization and seeding
-using var scope = app.Services.CreateScope();
-var services = scope.ServiceProvider;
-var logger = services.GetRequiredService<ILogger<Program>>();
-
-try
-{
-    var context = services.GetRequiredService<MasterNetDbContext>();
-    var userManager = services.GetRequiredService<UserManager<AppUser>>();
-    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-    
-    await context.Database.MigrateAsync();
-    await DataSeedExtensions.SeedDataAsync(context, userManager, roleManager, logger);
-}
-catch (Exception ex)
-{
-    logger.LogError(ex, "An error occurred during migration or seeding.");
-}
+// ✅ Database initialization usando método de extensión
+await app.ApplyDatabaseInitializationAsync();
 
 app.MapControllers();
 
